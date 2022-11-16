@@ -1,12 +1,16 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login - Stronk</title>
+    <title>@ViewData["Title"] - Stronk</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
 <div class="wrap-login">
     <div class="login-form">
+        <ul>
+            <li><a asp-controller="Login" asp-action="Index">Login</a></li>
+            <li><a asp-controller="Login" asp-action="Register">Register</a></li>
+        </ul>
         @RenderBody()
     </div>
 </div>

@@ -55,11 +55,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="BCrypt.Net" Version="0.1.0" />
       <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Database" />
     </ItemGroup>
 
 </Project>

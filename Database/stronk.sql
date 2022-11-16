@@ -27,7 +27,7 @@ CREATE TABLE tbl_Exercise (
 CREATE TABLE tbl_User (
 	Id INT NOT NULL IDENTITY(0, 1),
 	Username NVARCHAR(50) NOT NULL,
-	[Password] VARBINARY(130) NOT NULL,
+	[Password] CHAR(60) NOT NULL,
 	[Admin] BIT NOT NULL CONSTRAINT DF_Admin DEFAULT 0,
 	CONSTRAINT PK_User PRIMARY KEY (Id)
 )
@@ -68,15 +68,18 @@ CREATE TABLE tbl_Workout_Exercise (
 
 -- PROCEDUREN
 GO
-CREATE PROCEDURE usp_Register @username NVARCHAR(50), @password NVARCHAR(90)
+CREATE PROCEDURE usp_Register @username NVARCHAR(50), @password NVARCHAR(90), @hash CHAR(60)
 AS
 BEGIN
+IF @username = NULL OR @password = NULL OR @hash = NULL
+	RETURN
+
 DECLARE @used AS INT = 0;
 SELECT @used = COUNT(Username) FROM tbl_User WHERE Username = @username
 IF LEN(@username) > 5 OR LEN(@password) > 90 OR @used > 0
 	RETURN
 
-INSERT INTO tbl_User (Username, [Password]) VALUES (@username, HASHBYTES('SHA2_512', @password))
+INSERT INTO tbl_User (Username, [Password]) VALUES (@username, @hash)
 END
 GO
 
@@ -104,10 +107,9 @@ INSERT INTO tbl_Workout VALUES ('Upper Body');
 INSERT INTO tbl_Workout_Exercise VALUES (0, 0);
 INSERT INTO tbl_Exercise_Muscle VALUES(0, 1);
 INSERT INTO tbl_Exercise_Muscle VALUES(1, 0);
-EXEC usp_Register @username = 'Joe', @password = 'Hi';
+EXEC usp_Register @username = 'Joe', @password = 'Hi', @hash = '$2a$10$zX.ySvdSO/Z4A/qg2CdqcuclPIteKAmROd/jDqskYQAY.uU6Yfd/i';
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
 SELECT * FROM tbl_Post;
-
 
 
 

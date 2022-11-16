@@ -64,3 +64,4 @@ C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src\obj\Debug\net6.0\refint
 C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src\obj\Debug\net6.0\Stronk.pdb
 C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src\obj\Debug\net6.0\Stronk.genruntimeconfig.cache
 C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src\obj\Debug\net6.0\ref\Stronk.dll
+C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src\bin\Debug\net6.0\BCrypt.Net.dll

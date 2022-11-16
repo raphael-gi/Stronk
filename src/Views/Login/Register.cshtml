@@ -2,6 +2,7 @@
 
 @{
     Layout = "_Login";
+    ViewData["Title"] ="Register";
 }
 
 <h1>Register</h1>
@@ -9,5 +10,5 @@
 {
     @Html.TextBoxFor(user => user.Username)
     @Html.TextBoxFor(user => user.Password)
-    <input type="submit" value="Login"/>
+    <input type="submit" value="Register"/>
 }

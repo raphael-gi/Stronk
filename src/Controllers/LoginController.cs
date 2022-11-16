@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Stronk.Models;
+using System.Data.SqlClient;
+using BCrypt.Net;
 
 namespace Stronk.Controllers;
 
@@ -13,6 +15,10 @@ public class LoginController : Controller
     [HttpPost]
     public RedirectResult Index(User user)
     {
+        if (BCrypt.Net.BCrypt.Verify(user.Password, "f"))
+        {
+            Console.WriteLine("correct");
+        }
         return Redirect("/Home");
     }
     public ActionResult Register()
@@ -22,7 +28,9 @@ public class LoginController : Controller
     [HttpPost]
     public RedirectResult Register(User user)
     {
-        Console.WriteLine(user.Username);
-        return Redirect("/");
+        string usernameHash = BCrypt.Net.BCrypt.HashPassword(user.Username);
+        SqlConnection sqlConnection = new SqlConnection();
+
+        return Redirect("/Login/Register");
     }
 }
