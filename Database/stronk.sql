@@ -71,22 +71,21 @@ GO
 CREATE PROCEDURE usp_Register @username NVARCHAR(50), @password NVARCHAR(90), @hash CHAR(60)
 AS
 BEGIN
-IF @username = NULL OR @password = NULL OR @hash = NULL
-	RETURN
-
 DECLARE @used AS INT = 0;
 SELECT @used = COUNT(Username) FROM tbl_User WHERE Username = @username
-IF LEN(@username) > 5 OR LEN(@password) > 90 OR @used > 0
+IF LEN(@username) > 50 OR LEN(@password) > 90 OR @used > 0
 	RETURN
 
 INSERT INTO tbl_User (Username, [Password]) VALUES (@username, @hash)
 END
 GO
 
-CREATE PROCEDURE usp_Login @username NVARCHAR(50), @password NVARCHAR(90)
-AS
+CREATE FUNCTION fn_Login (@username NVARCHAR(50))
+RETURNS CHAR(60)
 BEGIN
-SELECT COUNT(Id) FROM tbl_User WHERE Username = @username AND HASHBYTES('SHA2_512', @password) = [Password]
+DECLARE @password CHAR(60)
+SELECT @password = [Password] FROM tbl_User WHERE Username = @username
+RETURN @password
 END
 GO
 
@@ -101,6 +100,7 @@ INSERT INTO tbl_Muscle VALUES('Chest');
 INSERT INTO tbl_Muscle VALUES('Bicep');
 INSERT INTO tbl_Muscle VALUES('Tricep');
 INSERT INTO tbl_Muscle VALUES('Quads');
+INSERT INTO tbl_Muscle VALUES('Calves');
 INSERT INTO tbl_Exercise ([Name]) VALUES ('Bench Press');
 INSERT INTO tbl_Exercise ([Name]) VALUES ('Pull Up');
 INSERT INTO tbl_Workout VALUES ('Upper Body');
@@ -109,8 +109,8 @@ INSERT INTO tbl_Exercise_Muscle VALUES(0, 1);
 INSERT INTO tbl_Exercise_Muscle VALUES(1, 0);
 EXEC usp_Register @username = 'Joe', @password = 'Hi', @hash = '$2a$10$zX.ySvdSO/Z4A/qg2CdqcuclPIteKAmROd/jDqskYQAY.uU6Yfd/i';
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
-SELECT * FROM tbl_Post;
-
+SELECT * FROM tbl_User
+SELECT [dbo].fn_Login('Joe') AS [Password]
 
 
 -- SELECT tbl_Exercise.Name AS 'Exercise', tbl_Muscle.Name AS 'Muscle' FROM tbl_Exercise INNER JOIN (tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Muscle) ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise;
