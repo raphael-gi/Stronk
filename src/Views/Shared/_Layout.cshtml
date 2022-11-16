@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Stronk</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/Stronk.styles.css" asp-append-version="true"/>
+</head>
+<body>
+<header>
+    <nav>
+        <img class="logo" src="~/logo.png" title="Website Logo" alt="Website Logo" />
+        <ul>
+            <li><a asp-controller="Home" asp-action="Index">Homepage</a></li>
+            <li><a asp-controller="Home" asp-action="Workouts">Workouts</a></li>
+            <li><a asp-controller="Home" asp-action="Exercises">Exercises</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    @RenderBody()
+</main>
+<footer>
+    &copy; 2022 - Stronk - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

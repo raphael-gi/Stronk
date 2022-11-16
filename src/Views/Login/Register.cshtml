@@ -1,0 +1,13 @@
+﻿@model User
+
+@{
+    Layout = "_Login";
+}
+
+<h1>Register</h1>
+@using(Html.BeginForm("Register", "Login", FormMethod.Post))
+{
+    @Html.TextBoxFor(user => user.Username)
+    @Html.TextBoxFor(user => user.Password)
+    <input type="submit" value="Login"/>
+}
