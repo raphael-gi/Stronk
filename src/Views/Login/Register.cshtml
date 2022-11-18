@@ -2,10 +2,9 @@
 
 @{
     Layout = "_Login";
-    ViewData["Title"] ="Register";
+    ViewData["Title"] = "Register";
 }
 
-<h1>Register</h1>
 @using(Html.BeginForm("Register", "Login", FormMethod.Post))
 {
     @Html.TextBoxFor(user => user.Username)

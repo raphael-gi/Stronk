@@ -24,7 +24,7 @@ header ul {
   display: flex;
   gap: 20px;
 }
-header li {
+li {
   list-style: none;
 } 
 

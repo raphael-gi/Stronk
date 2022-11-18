@@ -1,10 +1,9 @@
 ﻿@model User
 @{
     Layout = "_Login";
-    ViewData["Title"] ="Login";
+    ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
 @using(Html.BeginForm("Index", "Login", FormMethod.Post))
 {
     @Html.TextBoxFor(user => user.Username)
