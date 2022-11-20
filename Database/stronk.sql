@@ -89,12 +89,10 @@ INSERT INTO tbl_User (Username, [Password]) VALUES (@username, HASHBYTES('SHA2_2
 END
 GO
 
-CREATE FUNCTION fn_Login (@username NVARCHAR(50), @password NVARCHAR(90))
-RETURNS BIT
+CREATE PROCEDURE usp_Login @username NVARCHAR(50), @password NVARCHAR(90)
+AS
 BEGIN
-DECLARE @results AS INT
-SELECT @results = COUNT(Id) FROM tbl_User WHERE Username = @username AND [Password] = HASHBYTES('SHA2_256', @password);
-RETURN @results
+SELECT COUNT(Id) FROM tbl_User WHERE Username = @username AND [Password] = HASHBYTES('SHA2_256', @password);
 END
 GO
 
@@ -108,10 +106,23 @@ GO
 -- VIEWS
 
 GO
-CREATE VIEW vw_Post
+CREATE VIEW vw_Exercise
 AS
-SELECT tbl_Post.[Title], tbl_Post.[Message], tbl_Post.[Date], tbl_Workout.[Name] AS WorkoutName, tbl_Exercise.[Name] AS ExerciseName
-FROM tbl_Exercise, tbl_Workout, tbl_Post INNER JOIN tbl_User ON tbl_Post.Id_User = tbl_User.Id
+SELECT tbl_Exercise.[Name], tbl_Exercise.[Description] AS MuscleName
+FROM tbl_Exercise INNER JOIN
+(tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Exercise)
+ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise
+GO
+
+GO
+CREATE VIEW vw_Workout
+AS
+SELECT tbl_Workout.[Name], tbl_Exercise.[Name] AS ExerciseName, tbl_Muscle.[Name] AS MuscleName
+FROM tbl_Workout INNER JOIN 
+((tbl_Exercise INNER JOIN
+(tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Muscle) ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise)
+INNER JOIN tbl_Workout_Exercise ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Exercise)
+ON tbl_Workout.Id = tbl_Workout_Exercise.Id_Workout
 GO
 
 
@@ -130,7 +141,6 @@ INSERT INTO tbl_Exercise_Muscle VALUES(1, 0);
 EXEC usp_Register @username = 'Joe', @password = 'Hi';
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Another Crazy Workout', 0);
-SELECT * FROM vw_Post
 
 -- SELECT tbl_Exercise.Name AS 'Exercise', tbl_Muscle.Name AS 'Muscle' FROM tbl_Exercise INNER JOIN (tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Muscle) ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise;
 -- SELECT tbl_Workout.Name AS 'Workout', tbl_Exercise.Name AS 'Exercise' FROM tbl_Workout INNER JOIN (tbl_Exercise INNER JOIN tbl_Workout_Exercise ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Exercise) ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Workout;
