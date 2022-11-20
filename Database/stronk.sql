@@ -27,7 +27,7 @@ CREATE TABLE tbl_Exercise (
 CREATE TABLE tbl_User (
 	Id INT NOT NULL IDENTITY(0, 1),
 	Username NVARCHAR(50) NOT NULL,
-	[Password] CHAR(60) NOT NULL,
+	[Password] varbinary(128) NOT NULL,
 	[Admin] BIT NOT NULL CONSTRAINT DF_Admin DEFAULT 0,
 	CONSTRAINT PK_User PRIMARY KEY (Id)
 )
@@ -66,9 +66,18 @@ CREATE TABLE tbl_Workout_Exercise (
 	CONSTRAINT FK_Exercise_Workout FOREIGN KEY (Id_Exercise) REFERENCES tbl_Exercise (Id)
 )
 
+CREATE TABLE tbl_Post_Workout (
+	Id INT NOT NULL IDENTITY(0,1),
+	Id_Post INT NOT NULL,
+	Id_Workout INT NOT NULL,
+	CONSTRAINT PK_Post_Workout PRIMARY KEY (Id),
+	CONSTRAINT FK_Post_Workout FOREIGN KEY (Id_Post) REFERENCES tbl_Post (Id),
+	CONSTRAINT FK_Wourkout_Post FOREIGN KEY (Id_Workout) REFERENCES tbl_Workout (Id)
+)
+
 -- PROCEDUREN
 GO
-CREATE PROCEDURE usp_Register @username NVARCHAR(50), @password NVARCHAR(90), @hash CHAR(60)
+CREATE PROCEDURE usp_Register @username NVARCHAR(50), @password NVARCHAR(90)
 AS
 BEGIN
 DECLARE @used AS INT = 0;
@@ -76,23 +85,34 @@ SELECT @used = COUNT(Username) FROM tbl_User WHERE Username = @username
 IF LEN(@username) > 50 OR LEN(@password) > 90 OR @used > 0
 	RETURN
 
-INSERT INTO tbl_User (Username, [Password]) VALUES (@username, @hash)
+INSERT INTO tbl_User (Username, [Password]) VALUES (@username, HASHBYTES('SHA2_256', @password))
 END
 GO
 
-CREATE FUNCTION fn_Login (@username NVARCHAR(50))
-RETURNS CHAR(60)
+CREATE FUNCTION fn_Login (@username NVARCHAR(50), @password NVARCHAR(90))
+RETURNS BIT
 BEGIN
-DECLARE @password CHAR(60)
-SELECT @password = [Password] FROM tbl_User WHERE Username = @username
-RETURN @password
+DECLARE @results AS INT
+SELECT @results = COUNT(Id) FROM tbl_User WHERE Username = @username AND [Password] = HASHBYTES('SHA2_256', @password);
+RETURN @results
 END
 GO
 
 -- INDEX
 
+GO
 CREATE INDEX ix_Muscle
 ON tbl_Muscle ([Name])
+GO
+
+-- VIEWS
+
+GO
+CREATE VIEW vw_Post
+AS
+SELECT tbl_Post.[Title], tbl_Post.[Message], tbl_Post.[Date], tbl_Workout.[Name] AS WorkoutName, tbl_Exercise.[Name] AS ExerciseName
+FROM tbl_Exercise, tbl_Workout, tbl_Post INNER JOIN tbl_User ON tbl_Post.Id_User = tbl_User.Id
+GO
 
 
 INSERT INTO tbl_Muscle VALUES('Back');
@@ -107,11 +127,10 @@ INSERT INTO tbl_Workout VALUES ('Upper Body');
 INSERT INTO tbl_Workout_Exercise VALUES (0, 0);
 INSERT INTO tbl_Exercise_Muscle VALUES(0, 1);
 INSERT INTO tbl_Exercise_Muscle VALUES(1, 0);
-EXEC usp_Register @username = 'Joe', @password = 'Hi', @hash = '$2a$10$zX.ySvdSO/Z4A/qg2CdqcuclPIteKAmROd/jDqskYQAY.uU6Yfd/i';
+EXEC usp_Register @username = 'Joe', @password = 'Hi';
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
-SELECT * FROM tbl_User
-SELECT [dbo].fn_Login('Joe') AS [Password]
-
+INSERT INTO tbl_Post (Title, Id_User) VALUES('Another Crazy Workout', 0);
+SELECT * FROM vw_Post
 
 -- SELECT tbl_Exercise.Name AS 'Exercise', tbl_Muscle.Name AS 'Muscle' FROM tbl_Exercise INNER JOIN (tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Muscle) ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise;
 -- SELECT tbl_Workout.Name AS 'Workout', tbl_Exercise.Name AS 'Exercise' FROM tbl_Workout INNER JOIN (tbl_Exercise INNER JOIN tbl_Workout_Exercise ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Exercise) ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Workout;

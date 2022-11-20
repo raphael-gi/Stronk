@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Stronk.Models;
-using System.Data.SqlClient;
-using BCrypt.Net;
+using Stronk.Data;
 
 namespace Stronk.Controllers;
 
 public class LoginController : Controller
 {
+    private DatabaseConn _databaseConn;
     public ActionResult Index()
     {
         return View();
@@ -15,10 +15,18 @@ public class LoginController : Controller
     [HttpPost]
     public RedirectResult Index(User user)
     {
-        if (BCrypt.Net.BCrypt.Verify(user.Password, "f"))
+        if (!ModelState.IsValid)
         {
-            Console.WriteLine("correct");
+            Console.WriteLine("Inputs aren't valid");
+            return Redirect("/Login");
         }
+        _databaseConn = new DatabaseConn("usp_Login");
+        if (!_databaseConn.Login(user))
+        {
+            Console.WriteLine("Incorrect Login");
+            return Redirect("/Login");
+        }
+
         return Redirect("/Home");
     }
     public ActionResult Register()
@@ -28,9 +36,18 @@ public class LoginController : Controller
     [HttpPost]
     public RedirectResult Register(User user)
     {
-        string usernameHash = BCrypt.Net.BCrypt.HashPassword(user.Username);
-        SqlConnection sqlConnection = new SqlConnection();
+        if (!ModelState.IsValid)
+        {
+            Console.WriteLine("Inputs aren't valid");
+            return Redirect("/Login/Register");
+        }
 
-        return Redirect("/Login/Register");
+        _databaseConn = new DatabaseConn("usp_Register");
+        if (!_databaseConn.Register(user))
+        {
+            Console.WriteLine("Register Unsuccessful");
+            return Redirect("/Login/Register");
+        }
+        return Redirect("/Login");
     }
 }
