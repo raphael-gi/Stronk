@@ -38,4 +38,19 @@ public class DatabaseConn
         _sqlConnection.Close();
         return result > 0;
     }
+
+    public List<Exercise> Exercise()
+    {
+        _sqlConnection.Open();
+        SqlDataReader _sqlDataReader = _sqlCommand.ExecuteReader();
+        List<Exercise> exercises = new List<Exercise>();
+        while (_sqlDataReader.Read())
+        {
+            Exercise exercise = new Exercise();
+            exercise.Name = _sqlDataReader.GetString(0);
+            exercises.Add(exercise);
+        }
+        _sqlConnection.Close();
+        return exercises;
+    }
 }
