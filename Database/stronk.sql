@@ -17,19 +17,20 @@ CREATE TABLE tbl_Muscle (
 	CONSTRAINT PK_Muscle PRIMARY KEY (Id)
 )
 
-CREATE TABLE tbl_Exercise (
-	Id INT NOT NULL IDENTITY(0, 1),
-	[Name] NVARCHAR(50) NOT NULL,
-	[Description] TEXT,
-	CONSTRAINT PK_Exercise PRIMARY KEY (Id)
-)
-
 CREATE TABLE tbl_User (
 	Id INT NOT NULL IDENTITY(0, 1),
 	Username NVARCHAR(50) NOT NULL,
 	[Password] varbinary(128) NOT NULL,
 	[Admin] BIT NOT NULL CONSTRAINT DF_Admin DEFAULT 0,
 	CONSTRAINT PK_User PRIMARY KEY (Id)
+)
+CREATE TABLE tbl_Exercise (
+	Id INT NOT NULL IDENTITY(0, 1),
+	[Name] NVARCHAR(50) NOT NULL,
+	[Description] TEXT,
+	Id_User INT NOT NULL,
+	CONSTRAINT PK_Exercise PRIMARY KEY (Id),
+	CONSTRAINT FK_Exercise_User FOREIGN KEY (Id_User) REFERENCES tbl_User (Id)
 )
 CREATE TABLE tbl_Workout (
 	Id INT NOT NULL IDENTITY(0, 1),
@@ -108,10 +109,9 @@ GO
 GO
 CREATE VIEW vw_Exercise
 AS
-SELECT tbl_Exercise.[Name], tbl_Exercise.[Description] AS MuscleName
-FROM tbl_Exercise INNER JOIN
-(tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Exercise)
-ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise
+SELECT tbl_Exercise.[Name], tbl_Exercise.[Description], tbl_Muscle.[Name] AS MuscleName
+FROM tbl_Exercise INNER JOIN (tbl_Exercise_Muscle INNER JOIN tbl_Muscle ON tbl_Exercise_Muscle.Id_Muscle = tbl_Muscle.Id)
+ON tbl_Exercise_Muscle.Id_Exercise = tbl_Exercise.Id
 GO
 
 GO
@@ -136,8 +136,9 @@ INSERT INTO tbl_Exercise ([Name]) VALUES ('Bench Press');
 INSERT INTO tbl_Exercise ([Name]) VALUES ('Pull Up');
 INSERT INTO tbl_Workout VALUES ('Upper Body');
 INSERT INTO tbl_Workout_Exercise VALUES (0, 0);
-INSERT INTO tbl_Exercise_Muscle VALUES(0, 1);
-INSERT INTO tbl_Exercise_Muscle VALUES(1, 0);
+INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(0, 1);
+INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(0, 2);
+INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(1, 1);
 EXEC usp_Register @username = 'Joe', @password = 'Hi';
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Another Crazy Workout', 0);
