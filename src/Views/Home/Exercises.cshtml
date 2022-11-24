@@ -7,4 +7,8 @@
 @foreach (Exercise exercise in ViewBag.Exercises)
 {
     <h2>@exercise.Name</h2>
+    foreach (Muscle muscle in exercise.Muscles)
+    {
+        <h3>@muscle.Name</h3>
+    }
 }
