@@ -13,20 +13,20 @@ public class DatabaseConn
         _sqlCommand = new SqlCommand(command, _sqlConnection);
     }
 
-    public bool Login(User user)
+    public int Login(User user)
     {
         _sqlCommand.CommandType = CommandType.StoredProcedure;
         _sqlCommand.Parameters.Add("@username", SqlDbType.NVarChar).Value = user.Username;
         _sqlCommand.Parameters.Add("@password", SqlDbType.NVarChar).Value = user.Password;
         _sqlConnection.Open();
-        SqlDataReader _sqlDataReader = _sqlCommand.ExecuteReader();
-        int result = 0;
-        while (_sqlDataReader.Read())
+        SqlDataReader sqlDataReader = _sqlCommand.ExecuteReader();
+        int id = -1;
+        while (sqlDataReader.Read())
         {
-            result = _sqlDataReader.GetInt32(0);
+            id = sqlDataReader.GetInt32(0);
         }
         _sqlConnection.Close();
-        return result > 0;
+        return id;
     }
     public bool Register(User user)
     {
@@ -42,12 +42,17 @@ public class DatabaseConn
     public List<Exercise> Exercise()
     {
         _sqlConnection.Open();
-        SqlDataReader _sqlDataReader = _sqlCommand.ExecuteReader();
+        SqlDataReader sqlDataReader = _sqlCommand.ExecuteReader();
         List<Exercise> exercises = new List<Exercise>();
-        while (_sqlDataReader.Read())
+        while (sqlDataReader.Read())
         {
             Exercise exercise = new Exercise();
-            exercise.Name = _sqlDataReader.GetString(0);
+            Muscle muscle = new Muscle();
+            List<Muscle> muscles = new List<Muscle>();
+            exercise.Name = sqlDataReader.GetString(0);
+            muscle.Name = sqlDataReader.GetString(2);
+            muscles.Add(muscle);
+            exercise.Muscles = muscles;
             exercises.Add(exercise);
         }
         _sqlConnection.Close();

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "JYGVDQpfdnCTXviGM/7Rs17NYWOG8RCeIjwnZZQJhx8=",
+  "Hash": "7a3v7XV+Zizz/ytu/0TPSxaUvz0fp+4BRK+v7CAKZj0=",
   "Source": "Stronk",
   "BasePath": "_content/Stronk",
   "Mode": "Default",
@@ -16,40 +16,6 @@
     }
   ],
   "Assets": [
-    {
-      "Identity": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\obj\\Debug\\net6.0\\scopedcss\\bundle\\Stronk.styles.css",
-      "SourceId": "Stronk",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
-      "BasePath": "_content/Stronk",
-      "RelativePath": "Stronk.styles.css",
-      "AssetKind": "All",
-      "AssetMode": "CurrentProject",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ApplicationBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\obj\\Debug\\net6.0\\scopedcss\\bundle\\Stronk.styles.css"
-    },
-    {
-      "Identity": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\Stronk.bundle.scp.css",
-      "SourceId": "Stronk",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
-      "BasePath": "_content/Stronk",
-      "RelativePath": "Stronk.bundle.scp.css",
-      "AssetKind": "All",
-      "AssetMode": "Reference",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ProjectBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\Stronk.bundle.scp.css"
-    },
     {
       "Identity": "C:\\Programmieren\\C#\\M133-Stronk\\modul-133-raphael-gi\\src\\wwwroot\\css\\site.css",
       "SourceId": "Stronk",
