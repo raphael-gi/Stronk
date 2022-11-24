@@ -93,7 +93,7 @@ GO
 CREATE PROCEDURE usp_Login @username NVARCHAR(50), @password NVARCHAR(90)
 AS
 BEGIN
-SELECT COUNT(Id) FROM tbl_User WHERE Username = @username AND [Password] = HASHBYTES('SHA2_256', @password);
+SELECT Id FROM tbl_User WHERE Username = @username AND [Password] = HASHBYTES('SHA2_256', @password);
 END
 GO
 
@@ -109,7 +109,7 @@ GO
 GO
 CREATE VIEW vw_Exercise
 AS
-SELECT tbl_Exercise.[Name], tbl_Exercise.[Description], tbl_Muscle.[Name] AS MuscleName
+SELECT tbl_Exercise.Id, tbl_Exercise.[Name], tbl_Exercise.[Description], tbl_Muscle.[Name] AS MuscleName
 FROM tbl_Exercise INNER JOIN (tbl_Exercise_Muscle INNER JOIN tbl_Muscle ON tbl_Exercise_Muscle.Id_Muscle = tbl_Muscle.Id)
 ON tbl_Exercise_Muscle.Id_Exercise = tbl_Exercise.Id
 GO
@@ -132,14 +132,14 @@ INSERT INTO tbl_Muscle VALUES('Bicep');
 INSERT INTO tbl_Muscle VALUES('Tricep');
 INSERT INTO tbl_Muscle VALUES('Quads');
 INSERT INTO tbl_Muscle VALUES('Calves');
-INSERT INTO tbl_Exercise ([Name]) VALUES ('Bench Press');
-INSERT INTO tbl_Exercise ([Name]) VALUES ('Pull Up');
+EXEC usp_Register @username = 'Joe', @password = 'Hi';
+INSERT INTO tbl_Exercise ([Name], Id_User) VALUES ('Bench Press', 0);
+INSERT INTO tbl_Exercise ([Name], Id_User) VALUES ('Pull Up', 0);
 INSERT INTO tbl_Workout VALUES ('Upper Body');
 INSERT INTO tbl_Workout_Exercise VALUES (0, 0);
 INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(0, 1);
 INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(0, 2);
 INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(1, 1);
-EXEC usp_Register @username = 'Joe', @password = 'Hi';
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
 INSERT INTO tbl_Post (Title, Id_User) VALUES('Another Crazy Workout', 0);
 
