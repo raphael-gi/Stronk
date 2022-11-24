@@ -21,18 +21,19 @@ public class LoginController : Controller
             return Redirect("/Login");
         }
         _databaseConn = new DatabaseConn("usp_Login");
-        if (!_databaseConn.Login(user))
+        int id = _databaseConn.Login(user);
+        if (id < 0)
         {
             Console.WriteLine("Incorrect Login");
             return Redirect("/Login");
         }
-
         return Redirect("/Home");
     }
     public ActionResult Register()
     {
         return View();
     }
+    
     [HttpPost]
     public RedirectResult Register(User user)
     {
@@ -41,7 +42,7 @@ public class LoginController : Controller
             Console.WriteLine("Inputs aren't valid");
             return Redirect("/Login/Register");
         }
-
+        
         _databaseConn = new DatabaseConn("usp_Register");
         if (!_databaseConn.Register(user))
         {

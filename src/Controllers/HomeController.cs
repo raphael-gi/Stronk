@@ -12,9 +12,7 @@ public class HomeController : Controller
     public HomeController()
     {
         //Check for session
-        Console.WriteLine("checking");
     }
-        
     public IActionResult Index()
     {
         return View();
