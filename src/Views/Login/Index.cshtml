@@ -1,4 +1,5 @@
-﻿@model User
+﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+@model User
 @{
     Layout = "_Login";
     ViewData["Title"] = "Login";
@@ -6,7 +7,7 @@
 
 @using(Html.BeginForm("Index", "Login", FormMethod.Post))
 {
-    @Html.TextBoxFor(user => user.Username)
-    @Html.TextBoxFor(user => user.Password)
+    @Html.TextBoxFor(user => user.Username, new { placeholder = "Username", required = "required" })
+    @Html.TextBoxFor(user => user.Password, new { placeholder = "Password", required = "required" })
     <input type="submit" value="Login"/>
 }
