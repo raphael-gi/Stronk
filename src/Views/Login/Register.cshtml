@@ -8,6 +8,6 @@
 @using(Html.BeginForm("Register", "Login", FormMethod.Post))
 {
     @Html.TextBoxFor(user => user.Username, new { placeholder = "Username", required = "required" })
-    @Html.TextBoxFor(user => user.Password, new { placeholder = "Password", required = "required" })
+    @Html.PasswordFor(user => user.Password, new { placeholder = "Password", required = "required" })
     <input type="submit" value="Register"/>
 }
