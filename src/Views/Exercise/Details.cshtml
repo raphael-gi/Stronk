@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Exercise Details";
+}
+
+<h1>@ViewBag.Exercise.Name</h1>
+<h3>@ViewBag.Exercise.Description</h3>
+
+@foreach (Muscle muscle in ViewBag.Muscles)
+{
+    <h3>@muscle.Name</h3>
+}
+
+<a asp-controller="Exercise" asp-action="Edit"><button>Edit this Exercise</button></a>

@@ -1,0 +1,25 @@
+﻿@model Workout
+@{
+    Layout = "_Form";
+    ViewData["Title"] = "Create Workout";
+}
+
+
+
+@using (Html.BeginForm("Create", "Workout", FormMethod.Post))
+{
+    @Html.TextBoxFor(workout => workout.Name, new { placeholder = "Name", required = "required", maxlength = 50 })
+    <div class="dropSelect">
+        <button type="button" id="dropdownButton">Select Exercises</button>
+        <ul class="wrapOptions" id="wrapOptions">
+            @foreach (Exercise exercise in ViewBag.Exercises)
+            {
+                <li>
+                    @Html.CheckBox("exercise", false, new { value = exercise.Id })
+                    @exercise.Name
+                </li>
+            }
+        </ul>
+    </div>
+    <input type="submit" value="Create Workout"/>
+}

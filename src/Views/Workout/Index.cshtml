@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Workouts";
+}
+
+<h1>Workouts</h1>
+
+@foreach (Workout workout in ViewBag.Workouts)
+{
+    <h3>@workout.Name</h3>
+}
+<a asp-controller="Workout" asp-action="Create"><button>Create new Workout</button></a>

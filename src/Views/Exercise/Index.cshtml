@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Exercises";
+}
+
+<h1>Exercises</h1>
+
+@foreach(Muscle muscle in ViewBag.Muscles)
+{
+    @Html.ActionLink(muscle.Name, "Index", "Exercise", new { Muscle = muscle.Id }, null);
+}
+@foreach (Exercise exercise in ViewBag.Exercises)
+{
+    <div>
+        <h2>@exercise.Name</h2>
+        <h3>@exercise.Description</h3>
+        <a type="button" asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button>Edit</button></a>
+    </div>
+}
+
+<a asp-controller="Exercise" asp-action="Create"><button>Create new Exercise</button></a>
