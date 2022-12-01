@@ -13,10 +13,11 @@
         <img class="logo" src="~/logo.png" title="Website Logo" alt="Website Logo" />
         <ul>
             <li><a asp-controller="Home" asp-action="Index">Homepage</a></li>
-            <li><a asp-controller="Home" asp-action="Workouts">Workouts</a></li>
-            <li><a asp-controller="Home" asp-action="Exercises">Exercises</a></li>
+            <li><a asp-controller="Workout" asp-action="Index">Workouts</a></li>
+            <li><a asp-controller="Exercise" asp-action="Index">Exercises</a></li>
         </ul>
     </nav>
+    <a asp-controller="Home" asp-action="Logout"><button>Logout</button></a>
 </header>
 <main>
     @RenderBody()
