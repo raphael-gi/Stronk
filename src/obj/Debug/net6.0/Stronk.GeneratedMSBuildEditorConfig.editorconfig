@@ -8,53 +8,53 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Stronk
 build_property.RootNamespace = Stronk
-build_property.ProjectDir = C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src\
+build_property.ProjectDir = C:\Programmieren\C#\M133\modul-133-raphael-gi\src\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Programmieren\C#\M133-Stronk\modul-133-raphael-gi\src
+build_property.MSBuildProjectDirectory = C:\Programmieren\C#\M133\modul-133-raphael-gi\src
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Home/Exercises.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Home/Exercises.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFeGVyY2lzZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Home/Index.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Home/Privacy.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Home/Workouts.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Home/Workouts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxXb3Jrb3V0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Login/Index.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Login/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Login/Register.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Login/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cUmVnaXN0ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Shared/Error.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Shared/_Layout.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/Shared/_Login.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/Shared/_Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/_ViewImports.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Programmieren/C\#/M133-Stronk/modul-133-raphael-gi/src/Views/_ViewStart.cshtml]
+[C:/Programmieren/C\#/M133/modul-133-raphael-gi/src/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
