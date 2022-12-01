@@ -1,36 +1,29 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Stronk.Data;
 using Stronk.Models;
 
 namespace Stronk.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
-    private DatabaseConn _databaseConn;
-
-    public HomeController()
-    {
-        //Check for session
-    }
     public IActionResult Index()
     {
-        return View();
-    }
-    public IActionResult Workouts()
-    {
-        return View();
-    }
-    public IActionResult Exercises()
-    {
-        _databaseConn = new DatabaseConn("SELECT [Name], [Description], MuscleName FROM vw_Exercise");
-        List<Exercise> exercises = _databaseConn.Exercise();
-        ViewBag.Exercises = exercises;
+        Console.WriteLine(ClaimTypes.NameIdentifier);
         return View();
     }
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
+        return Redirect("/Login");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
