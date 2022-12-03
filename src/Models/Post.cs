@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stronk.Models;
 
+[Table("tbl_Post")]
 public class Post
 {
     [Key]
@@ -10,5 +12,6 @@ public class Post
     public string Message { get; set; }
     public DateTime date { get; set; }
     public int UserId { get; set; }
-    public virtual User User { get; set; }
+    public User User { get; set; }
+    public ICollection<PostWorkout> PostWorkout { get; set; }
 }

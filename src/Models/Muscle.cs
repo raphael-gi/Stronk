@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stronk.Models;
 
+[Table("tbl_Muscle")]
 public class Muscle
 {
     [Key]
@@ -9,5 +11,5 @@ public class Muscle
     [Required]
     public string Name { get; set; }
 
-    public ICollection<ExerciseMuscle> ExerciseMuscles;
+    public ICollection<ExerciseMuscle> ExerciseMuscles { get; set; }
 }
