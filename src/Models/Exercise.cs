@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stronk.Models;
 
+[Table("tbl_Exercise")]
 public class Exercise
 {
     [Key]
@@ -9,6 +11,6 @@ public class Exercise
     [Required] [MaxLength(50)]
     public string Name { get; set; }
     public string Description { get; set; }
-    public int UserId { get; set; }
-    public IEnumerable<ExerciseMuscle>? ExerciseMuscles { get; set; }
+    public ICollection<ExerciseMuscle> ExerciseMuscles { get; set; }
+    public ICollection<WorkoutExercise> WorkoutExercises { get; set; }
 }

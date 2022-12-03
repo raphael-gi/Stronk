@@ -14,9 +14,9 @@ public class WorkoutController : Controller
     {
         _workoutRepository = workoutRepository;
     }
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        ViewBag.Workouts = _workoutRepository.Workouts();
+        ViewBag.Workouts = await _workoutRepository.GetWorkouts();
         return View();
     }
 
@@ -27,8 +27,18 @@ public class WorkoutController : Controller
     }
 
     [HttpPost]
-    public RedirectResult Create(Workout workout)
+    public async Task<RedirectResult> Create(Workout workout, int[] exercises)
     {
+        if (exercises.Length < 1)
+        {
+            Console.WriteLine("Please select an exercise");
+            return Redirect("/Workout/Create");
+        }
+        if (!await _workoutRepository.CreateWorkout(workout, exercises))
+        {
+            Console.WriteLine("Workout could not be added");
+            return Redirect("/Workout/Create");
+        }
         return Redirect("/Workout");
     }
 }

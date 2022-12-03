@@ -6,6 +6,10 @@
 
 @foreach (Workout workout in ViewBag.Workouts)
 {
-    <h3>@workout.Name</h3>
+    <h2>@workout.Name</h2>
+    @foreach (WorkoutExercise exercise in workout.WorkoutExercises)
+    {
+        <h4>@exercise.Exercise.Name</h4>
+    }
 }
 <a asp-controller="Workout" asp-action="Create"><button>Create new Workout</button></a>
