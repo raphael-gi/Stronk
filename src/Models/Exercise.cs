@@ -11,6 +11,8 @@ public class Exercise
     [Required] [MaxLength(50)]
     public string Name { get; set; }
     public string Description { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; }
     public ICollection<ExerciseMuscle> ExerciseMuscles { get; set; }
     public ICollection<WorkoutExercise> WorkoutExercises { get; set; }
 }
