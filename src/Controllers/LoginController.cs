@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Stronk.Data;
 using Stronk.Models;
+using Stronk.Repositories;
 
 namespace Stronk.Controllers;
 
@@ -29,7 +29,7 @@ public class LoginController : Controller
             return Redirect("/Login");
         }
 
-        int id = _userRepository.Login(user);
+        int id = await _userRepository.Login(user);
         if (id < 0)
         {
             return Redirect("/Login");
@@ -37,9 +37,10 @@ public class LoginController : Controller
 
         List<Claim> claims = new List<Claim>
         {
-            new (ClaimTypes.Name, user.Username)
+            new (ClaimTypes.Name, user.Username),
+            new (ClaimTypes.NameIdentifier, id.ToString())
         };
-        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Login");
+        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "User");
         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         Thread.CurrentPrincipal = claimsPrincipal;
 
@@ -54,7 +55,7 @@ public class LoginController : Controller
     }
     
     [HttpPost]
-    public RedirectResult Register(User user)
+    public async Task<RedirectResult> Register(User user)
     {
         if (!ModelState.IsValid)
         {
@@ -62,12 +63,18 @@ public class LoginController : Controller
             return Redirect("/Login/Register");
         }
 
-        if (!_userRepository.Register(user))
+        if (!await _userRepository.Register(user))
         {
             Console.WriteLine("Register failed");
             return Redirect("/Login/Register");
         }
 
+        return Redirect("/Login");
+    }
+    
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
         return Redirect("/Login");
     }
 
