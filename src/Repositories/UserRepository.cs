@@ -1,8 +1,10 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using System.Text;
 using Stronk.Models;
+using Stronk.Data;
 
-namespace Stronk.Data;
+namespace Stronk.Repositories;
 
 public class UserRepository
 {
@@ -13,9 +15,9 @@ public class UserRepository
         _databaseContext = databaseContext;
     }
 
-    public int Login(User user)
+    public async Task<int> Login(User user)
     {
-        List<User> check = _databaseContext.Users.Where(u => user.Username == u.Username && Hash(user.Password) == u.Password).ToList();
+        List<User> check = await _databaseContext.Users.Where(u => user.Username == u.Username && Hash(user.Password) == u.Password).ToListAsync();
         if (!check.Any())
         {
             Console.WriteLine("User doesn't exist");
@@ -24,9 +26,9 @@ public class UserRepository
         return check[0].Id;
     }
 
-    public bool Register(User user)
+    public async Task<bool> Register(User user)
     {
-        List<int> taken = _databaseContext.Users.Where(u => u.Username == user.Username).Select(u => u.Id).ToList();
+        List<int> taken = await _databaseContext.Users.Where(u => u.Username == user.Username).Select(u => u.Id).ToListAsync();
         if (taken.Any())
         {
             Console.WriteLine("Username already taken");
@@ -34,11 +36,14 @@ public class UserRepository
         }
 
         user.Password = Hash(user.Password);
-        _databaseContext.Users.Add(user);
-        _databaseContext.SaveChanges();
+        await _databaseContext.Users.AddAsync(user);
+        if (await _databaseContext.SaveChangesAsync() < 1)
+        {
+            return false;
+        }
         return true;
     }
-    static string Hash(string password)
+    private string Hash(string password)
     {
         string hash = String.Empty;
         using (SHA256 sha256 = SHA256.Create())
