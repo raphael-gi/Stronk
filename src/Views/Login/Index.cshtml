@@ -1,12 +1,12 @@
 ﻿@model User
 @{
     Layout = "_Login";
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Sign in";
 }
 
 @using(Html.BeginForm("Index", "Login", FormMethod.Post))
 {
     @Html.TextBoxFor(user => user.Username, new { placeholder = "Username", required = "required", maxlength = 50 })
     @Html.PasswordFor(user => user.Password, new { placeholder = "Password", required = "required", maxLength = 90 })
-    <input type="submit" value="Login"/>
+    <input type="submit" value="Sign in"/>
 }

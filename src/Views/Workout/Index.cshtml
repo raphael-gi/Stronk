@@ -2,14 +2,26 @@
     ViewData["Title"] = "Workouts";
 }
 
-<h1>Workouts</h1>
+<h1 class="pageTitle">Workouts</h1>
 
-@foreach (Workout workout in ViewBag.Workouts)
-{
-    <h2>@workout.Name</h2>
-    @foreach (WorkoutExercise exercise in workout.WorkoutExercises)
+<div class="wrapItems">
+    @foreach (Workout workout in ViewBag.Workouts)
     {
-        <h4>@exercise.Exercise.Name</h4>
+        <div class="item">
+            <div>
+                <h2>@workout.Name</h2>
+                <ul class="wrapSubItem">
+                    @foreach (WorkoutExercise workoutExercise in workout.WorkoutExercises)
+                    {
+                        <a asp-controller="Exercise" asp-action="Details" asp-route-id="@workoutExercise.Exercise.Id"><li class="subItem">@workoutExercise.Exercise.Name</li></a>
+                    }
+                </ul>
+            </div>
+            <div class="itemButtons">
+                <a asp-controller="Workout" asp-action="Edit" asp-route-id="@workout.Id"><button class="edit"><i class="bi bi-pencil"></i></button></a>
+                <a asp-controller="Workout" asp-action="Edit" asp-route-id="@workout.Id"><button class="delete"><i class="bi bi-trash"></i></button></a>
+            </div>
+        </div>
     }
-}
-<a asp-controller="Workout" asp-action="Create"><button>Create new Workout</button></a>
+    <a asp-controller="Workout" asp-action="Create" class="create"><button><i class="bi bi-plus-circle"></i></button></a>
+</div>

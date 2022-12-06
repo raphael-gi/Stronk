@@ -13,10 +13,10 @@
     <div class="dropSelect">
         <button type="button" id="dropdownButton">Select Muscles</button>
         <ul class="wrapOptions" id="wrapOptions">
-            @foreach (Muscle muscle in ViewBag.Muscles)
+            @foreach (Muscle muscle in ViewBag.Muscles) 
             {
                 <li>
-                    @Html.CheckBox("muscle", false, new { value = muscle.Id })
+                    @Html.CheckBox("muscles", false, new { value = muscle.Id })
                     @muscle.Name
                 </li>
             }

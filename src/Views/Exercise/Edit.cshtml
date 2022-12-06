@@ -4,16 +4,21 @@
     ViewData["Title"] = "Edit Exercise";
 }
 
-
-
 @using (Html.BeginForm("Edit", "Exercise", FormMethod.Post))
 {
-    @Html.TextBoxFor(exercise => exercise.Name, new { placeholder = "Name", required = "required", maxlength = 50, @Value="test" })
-    @Html.TextBoxFor(exercise => exercise.Description, new { placeholder = "Description", @Value = "test" })
-    @foreach (Muscle muscle in ViewBag.Muscles)
-    {
-        <p>@muscle.Name</p>
-        @Html.CheckBox("muscle", true, new { value = muscle.Id })
-    }
-    <input type="submit" value="Create Exercise"/>
+    @Html.TextBoxFor(exercise => exercise.Name, new { placeholder = "Name", required = "required", maxlength = 50 })
+    @Html.TextBoxFor(exercise => exercise.Description, new { placeholder = "Description" })
+    <div class="dropSelect">
+        <button type="button" id="dropdownButton">Select Muscles</button>
+        <ul class="wrapOptions" id="wrapOptions">
+            @foreach (Muscle muscle in ViewBag.Muscles) 
+            {
+                <li>
+                    @Html.CheckBox("muscles", ViewBag.SelectedMuscles.Contains(muscle.Id), new { value = muscle.Id })
+                    @muscle.Name
+                </li>
+            }
+        </ul>
+    </div>
+    <input type="submit" value="Edit Exercise"/>
 }

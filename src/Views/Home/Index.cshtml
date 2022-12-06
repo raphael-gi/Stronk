@@ -1,58 +1,51 @@
 ﻿@{
     ViewData["Title"] = "Posts";
 }
-<h1>Posts</h1>
+<h1 class="pageTitle">Posts</h1>
 
 <div class="wrapHome">
     <div class="wrapPosts">
-        <div class="post">
-            <div class="postWrapper">
-                <div class="postTitle">
-                    <h3>User 2</h3>
-                    <h2>Title</h2>
-                    <h3>09.11.2022</h3>
+        @foreach (Post post in ViewBag.Posts)
+        {
+            <div class="post">
+                <div class="postWrapper">
+                    <div class="postUser">
+                        <h3><strong>@post.User.Username</strong></h3>
+                        <h4><i>@post.Date.ToString("MM/dd/yyyy")</i></h4>
+                    </div>
+                    <div class="postBody">
+                        <h2>@post.Title</h2>
+                        <h3>@post.Message</h3>
+                        <ul>
+                            @foreach (PostWorkout postWorkout in post.PostWorkout)
+                            {
+                                <li><h4>@postWorkout.Workout.Name</h4></li>
+                                <ul class="postExercises">
+                                    @foreach (WorkoutExercise workoutExercise in postWorkout.Workout.WorkoutExercises)
+                                    {
+                                        <li>@workoutExercise.Exercise.Name</li>
+                                    }
+                                </ul>
+                            }
+                        </ul>
+                        @if (post.User.Username.Equals(User.Identity.Name))
+                        {
+                            <button>Delete</button>
+                        }
+                        else
+                        {
+                            <button>Copy Workout</button>
+                        }
+                    </div>
                 </div>
-                <h3>This was an Insane Workout</h3>
-                <ul>
-                    <li>Exercise 1</li>
-                    <li>Exercise 2</li>
-                </ul>
-                <button>Copy Workout</button>
             </div>
-        </div>
-        <div class="post">
-            <div class="postWrapper">
-                <div class="postTitle">
-                    <h3>User 1</h3>
-                    <h2>Title</h2>
-                    <h3>09.11.2022</h3>
-                </div>
-                <h3>This was an Insane Workout</h3>
-                <ul>
-                    <li>Exercise 1</li>
-                    <li>Exercise 2</li>
-                </ul>
-            </div>
-        </div>
-        <div class="post">
-            <div class="postWrapper">
-                <div class="postTitle">
-                    <h3>User 1</h3>
-                    <h2>Title</h2>
-                    <h3>09.11.2022</h3>
-                </div>
-                <h3>This was an Insane Workout</h3>
-                <ul>
-                    <li>Exercise 1</li>
-                    <li>Exercise 2</li>
-                </ul>
-            </div>
-        </div>
+        }
     </div>
     <div class="wrapProfile">
         <div class="profile">
-            <h2>Username</h2>
+            <h2>Username: @User.Identity?.Name</h2>
             <h3>Created Posts: 4</h3>
+            <a asp-controller="Home" asp-action="Create"><button>Create Post</button></a>
         </div>
     </div>
 </div>

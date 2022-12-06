@@ -2,19 +2,25 @@
     ViewData["Title"] = "Exercises";
 }
 
-<h1>Exercises</h1>
+<h1 class="pageTitle">Exercises</h1>
 
-@foreach(Muscle muscle in ViewBag.Muscles)
-{
-    @Html.ActionLink(muscle.Name, "Index", "Exercise", new { Muscle = muscle.Id }, null);
-}
-@foreach (Exercise exercise in ViewBag.Exercises)
-{
-    <div>
-        <h2>@exercise.Name</h2>
-        <h3>@exercise.Description</h3>
-        <a type="button" asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button>Edit</button></a>
-    </div>
-}
-
-<a asp-controller="Exercise" asp-action="Create"><button>Create new Exercise</button></a>
+<div class="wrapItems">
+    @foreach (Exercise exercise in ViewBag.Exercises)
+    {
+        <div class="item">
+            <div>
+                <h2>@exercise.Name</h2>
+                <h3>@exercise.Description</h3>
+                @foreach (ExerciseMuscle exerciseMuscle in exercise.ExerciseMuscles)
+                {
+                    <h4>@exerciseMuscle.Muscle.Name</h4>
+                }
+            </div>
+            <div class="itemButtons">
+                <a asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button class="edit"><i class="bi bi-pencil"></i></button></a>
+                <a asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button class="delete"><i class="bi bi-trash"></i></button></a>
+            </div>
+        </div>
+    }
+    <a asp-controller="Exercise" asp-action="Create" class="create"><button><i class="bi bi-plus-circle"></i></button></a>
+</div>

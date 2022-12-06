@@ -1,0 +1,26 @@
+﻿@model Post
+@{
+    Layout = "_Form";
+    ViewData["Title"] = "Create Post";
+}
+
+<h1>@TempData["error"]</h1>
+
+@using (Html.BeginForm("Create", "Home", FormMethod.Post))
+{
+    @Html.TextBoxFor(p => p.Title, new { placeholder = "Title", required = "required", maxlength = 50 })
+    @Html.TextAreaFor(p => p.Message, new { placeholder = "Message" })
+    <div class="dropSelect">
+        <button type="button" id="dropdownButton">Select Workouts</button>
+        <ul class="wrapOptions" id="wrapOptions">
+            @foreach (Workout workout in ViewBag.Workouts) 
+            {
+                <li>
+                    @Html.CheckBox("workouts", false, new { value = workout.Id })
+                    @workout.Name
+                </li>
+            }
+        </ul>
+    </div>
+    <input type="submit" value="Create Post"/>
+}
