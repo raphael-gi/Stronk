@@ -9,36 +9,41 @@ namespace Stronk.Controllers;
 public class ExerciseController : Controller
 {
     private readonly ExerciseRepository _exerciseRepository;
+    private readonly MuscleRepository _muscleRepository;
     
-    public ExerciseController(ExerciseRepository exerciseRepository)
+    public ExerciseController(ExerciseRepository exerciseRepository, MuscleRepository muscleRepository)
     {
         _exerciseRepository = exerciseRepository;
+        _muscleRepository = muscleRepository;
+    }
+    
+    private int GetId()
+    {
+        return int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value!);
     }
 
-    public ActionResult Index()
+
+    public async Task<ActionResult> Index()
     {
-        ViewBag.Muscles = _exerciseRepository.GetMuscles();
-        ViewBag.Exercises = _exerciseRepository.GetExercises();
+        ViewBag.Exercises = await _exerciseRepository.GetExercises(GetId());
         return View();
     }
-
-    public ActionResult Create()
+    public async Task<ActionResult> Create()
     {
-        ViewBag.Muscles = _exerciseRepository.GetMuscles();
+        ViewBag.Muscles = await _muscleRepository.GetMuscles();
         return View();
     }
-
     [HttpPost]
-    public RedirectResult Create(Exercise exercise, string[] muscle)
+    public async Task<RedirectResult> Create(Exercise exercise, int[] muscles)
     {
-        muscle = muscle.Where(m => !m.Contains("false")).ToArray();
-        //if (!ModelState.IsValid)
-        //{
-        //    Console.WriteLine(ModelState.ValidationState);
-        //    Console.WriteLine("Model State is not valid");
-        //    return Redirect("/Exercise/Create");
-        //}
-        if (!_exerciseRepository.Add(exercise, muscle))
+        if (muscles.Length < 1)
+        {
+            Console.WriteLine("Please select a muscle group");
+            return Redirect("/Exercise/Create");
+        }
+
+        exercise.UserId = GetId();
+        if (!await _exerciseRepository.CreateExercise(exercise, muscles))
         {
             Console.WriteLine("Exercise couldn't be added");
             return Redirect("/Exercise/Create");
@@ -46,13 +51,34 @@ public class ExerciseController : Controller
 
         return Redirect("/Exercise");
     }
-
-    public ActionResult Edit(int id)
+    public async Task<ActionResult> Edit(int id)
     {
-        Exercise exercise = _exerciseRepository.GetExercise(id);
-        Console.WriteLine(exercise.Name);
-        ViewBag.Exercise = exercise;
-        ViewBag.Muscles = _exerciseRepository.GetMuscles();
+        Exercise exercise = await _exerciseRepository.GetExercise(id);
+        ViewBag.SelectedMuscles = await _muscleRepository.GetSelectedMuscles(id);
+        ViewBag.Muscles = await _muscleRepository.GetMuscles();
+        return View(exercise);
+    }
+
+    [HttpPost]
+    public async Task<RedirectResult> Edit(Exercise exercise, int[] muscles)
+    {
+        if (muscles.Length < 1)
+        {
+            return Redirect("/Exercise/Edit/" + exercise.Id);
+        }
+
+        if (!await _exerciseRepository.EditExercise(exercise, muscles))
+        {
+            return Redirect("/Exercise/Edit/" + exercise.Id);
+        }
+
+        return Redirect("/Exercise");
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        ViewBag.Exercise = await _exerciseRepository.GetExercise(id);
+        ViewBag.Muscles = await _exerciseRepository.GetMusclesByExercise(id);
         return View();
     }
 }
