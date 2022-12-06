@@ -16,8 +16,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<MuscleRepository>();
 builder.Services.AddScoped<ExerciseRepository>();
 builder.Services.AddScoped<WorkoutRepository>();
+builder.Services.AddScoped<PostRepository>();
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
