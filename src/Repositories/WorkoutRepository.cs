@@ -11,47 +11,39 @@ public class WorkoutRepository
     {
         _databaseContext = databaseContext;
     }
-
-    public List<Exercise> Exercises()
+    public async Task<List<int>> GetSelectedExercises(int id)
     {
-        return _databaseContext.Exercises.ToList();
+        return await _databaseContext.WorkoutsExercises.Where(we => we.WorkoutId == id).Select(we => we.ExerciseId).ToListAsync();
     }
     public async Task<List<Workout>> GetWorkouts()
     {
-        return await _databaseContext.Workouts.Select(w => new Workout
-        {
-            Id = w.Id,
-            Name = w.Name,
-            WorkoutExercises = _databaseContext.WorkoutsExercises.Where(we => we.WorkoutId == w.Id).Select(we => new WorkoutExercise
-            {
-                WorkoutId = we.WorkoutId,
-                ExerciseId = we.ExerciseId,
-                Exercise = _databaseContext.Exercises.First(e => e.Id == we.ExerciseId)
-            }).ToList()
-        }).ToListAsync();
+        return await _databaseContext.Workouts
+            .Include(w => w.WorkoutExercises)
+            .ThenInclude(we => we.Exercise)
+            .ToListAsync();
+    }
+    public async Task<Workout> GetWorkout(int id)
+    {
+        return await _databaseContext.Workouts.FindAsync(id);
     }
     public async Task<bool> CreateWorkout(Workout workout, int[] exercises)
     {
-        await _databaseContext.Workouts.AddAsync(workout);
-        if (await _databaseContext.SaveChangesAsync() < 1)
-        {
-            return false;
-        }
-        Console.WriteLine(workout.Id);
         List<WorkoutExercise> workoutExercises = new List<WorkoutExercise>();
         foreach (int exercise in exercises)
         {
-            workoutExercises.Add(new WorkoutExercise()
+            workoutExercises.Add(new WorkoutExercise
             {
-                WorkoutId = workout.Id,
                 ExerciseId = exercise
             });
         }
-        await _databaseContext.WorkoutsExercises.AddRangeAsync(workoutExercises);
-        if (await _databaseContext.SaveChangesAsync() < 1)
-        {
-            return false;
-        }
-        return true;
+        workout.WorkoutExercises = workoutExercises;
+        await _databaseContext.Workouts.AddAsync(workout);
+        return await _databaseContext.SaveChangesAsync() > 0;
+    }
+    public async Task<bool> EditWorkout(Workout workout, int[] exercises)
+    {
+        Workout oldWorkout = await _databaseContext.Workouts.FindAsync(workout.Id);
+        oldWorkout.Name = workout.Name;
+        return await _databaseContext.SaveChangesAsync() > 0;
     }
 }

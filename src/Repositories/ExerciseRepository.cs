@@ -1,4 +1,5 @@
-﻿using Stronk.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Stronk.Models;
 using Stronk.Data;
 
 namespace Stronk.Repositories;
@@ -11,59 +12,63 @@ public class ExerciseRepository
     {
         _databaseContext = databaseContext;
     }
+    public async Task<List<Exercise>> GetExercises(int userId)
+    {
+        return await _databaseContext.Exercises
+            .Include(e => e.ExerciseMuscles)
+            .ThenInclude(em => em.Muscle)
+            .Where(e => e.UserId == userId)
+            .ToListAsync();
+    }
+    public async Task<Exercise> GetExercise(int id)
+    {
+        return await _databaseContext.Exercises.FindAsync(id);
+    }
+    public async Task<Exercise> GetMusclesByExercise(int id)
+    {
+        return await _databaseContext.Exercises
+            .Where(e => e.Id == id)
+            .Include(e => e.ExerciseMuscles)
+            .ThenInclude(em => em.Muscle)
+            .FirstAsync();
+    }
+    public async Task<bool> CreateExercise(Exercise exercise, int[] muscles)
+    {
+        List<ExerciseMuscle> exerciseMuscles = new List<ExerciseMuscle>();
+        foreach (int muscle in muscles)
+        {
+            exerciseMuscles.Add(new ExerciseMuscle()
+            {
+                MuscleId = muscle
+            });
+        }
 
-    public List<Exercise> GetExercises()
-    {
-        return _databaseContext.Exercises
-            .Where(e => e.UserId == 0)
-            .ToList();
-    }
-
-    public Exercise GetExercise(int id)
-    {
-        return _databaseContext.Exercises.Find(id);
-    }
-
-    public List<Muscle> GetSelectedMuscles(int id)
-    {
-        List<int> ids = _databaseContext.ExercisesMuscles.Where(em => em.ExerciseId == id).Select(em => em.MusclesId).ToList();
-        return _databaseContext.Muscles.Where(m => ids.Contains(m.Id)).ToList();
-    }
-
-    public List<Exercise> GetExercisesByMuscle(int id)
-    {
-        return _databaseContext.Exercises.ToList();
-    }
-    public List<Muscle> GetMuscles()
-    {
-        return _databaseContext.Muscles.ToList();
-    }
-    public bool Add(Exercise exercise, string[] muscles)
-    {
-        List<int> results = _databaseContext.Exercises.Where(e => e.Name == exercise.Name && e.UserId == 0).Select(e => e.Id).ToList();
-        if (results.Any())
+        exercise.ExerciseMuscles = exerciseMuscles;
+        await _databaseContext.Exercises.AddAsync(exercise);
+        if (await _databaseContext.SaveChangesAsync() < 1)
         {
             return false;
         }
-        _databaseContext.Exercises.Add(exercise);
-        _databaseContext.SaveChanges();
-        List<int> id = _databaseContext.Exercises.Where(e => e.Name == exercise.Name).Select(e => e.Id).ToList();
-        foreach (var muscle in muscles)
+        return true;
+    }
+    public async Task<bool> EditExercise(Exercise exercise, int[] muscles)
+    {
+        Exercise oldExercise = await _databaseContext.Exercises.FindAsync(exercise.Id);
+        List<ExerciseMuscle> exerciseMuscles = new List<ExerciseMuscle>();
+        foreach (int muscle in muscles)
         {
-            ExerciseMuscle exerciseMuscle = new ExerciseMuscle
+            exerciseMuscles.Add(new ExerciseMuscle
             {
-                ExerciseId = id[0],
-                MusclesId = int.Parse(muscle)
-            };
-            _databaseContext.ExercisesMuscles.Add(exerciseMuscle);
+                MuscleId = muscle
+            });
+        }
+        oldExercise.Name = exercise.Name;
+        oldExercise.Description = exercise.Description;
+        if (await _databaseContext.SaveChangesAsync() < 1)
+        {
+            return false;
         }
         
-        return _databaseContext.SaveChanges() > 0;
-    }
-
-    public bool Update(Exercise exercise, string[] muscles)
-    {
-        _databaseContext.Exercises.Update(exercise);
         return true;
     }
 }
