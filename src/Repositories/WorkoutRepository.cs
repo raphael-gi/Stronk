@@ -62,9 +62,8 @@ public class WorkoutRepository
     public async Task<bool> DeleteWorkout(int id)
     {
         Workout workout = await _databaseContext.Workouts
-            .Where(w => w.Id == id)
             .Include(w => w.WorkoutExercises)
-            .FirstAsync();
+            .FirstAsync(e => e.Id == id);
         _databaseContext.Workouts.Remove(workout);
         return await _databaseContext.SaveChangesAsync() > 0;
     }

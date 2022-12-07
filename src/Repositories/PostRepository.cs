@@ -45,9 +45,8 @@ public class PostRepository
     public async Task<bool> DeletePost(int id)
     {
         Post post = await _databaseContext.Posts
-            .Where(p => p.Id == id)
             .Include(p => p.PostWorkout)
-            .FirstAsync();
+            .FirstAsync(p => p.Id == id);
         _databaseContext.Posts.Remove(post);
         return await _databaseContext.SaveChangesAsync() > 0;
     }
