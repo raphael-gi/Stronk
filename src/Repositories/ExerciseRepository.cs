@@ -53,7 +53,10 @@ public class ExerciseRepository
     }
     public async Task<bool> EditExercise(Exercise exercise, int[] muscles)
     {
-        Exercise oldExercise = await _databaseContext.Exercises.FindAsync(exercise.Id);
+        Exercise oldExercise = await _databaseContext.Exercises
+            .Where(e => e.Id == exercise.Id)
+            .Include(e => e.ExerciseMuscles)
+            .FirstAsync();
         List<ExerciseMuscle> exerciseMuscles = new List<ExerciseMuscle>();
         foreach (int muscle in muscles)
         {
@@ -64,6 +67,7 @@ public class ExerciseRepository
         }
         oldExercise.Name = exercise.Name;
         oldExercise.Description = exercise.Description;
+        oldExercise.ExerciseMuscles = exerciseMuscles;
         if (await _databaseContext.SaveChangesAsync() < 1)
         {
             return false;

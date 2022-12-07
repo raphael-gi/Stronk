@@ -60,11 +60,11 @@ public class WorkoutController : Controller
     {
         if (exercises.Length < 1)
         {
-            return Redirect("/Workout/Edit" + workout.Id);
+            return Redirect("/Workout/Edit/" + workout.Id);
         }
         if (!await _workoutRepository.EditWorkout(workout, exercises))
         {
-            return Redirect("/Workout/Edit" + workout.Id);
+            return Redirect("/Workout/Edit/" + workout.Id);
         }
         
         return Redirect("/Workout");

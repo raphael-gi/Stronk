@@ -42,8 +42,21 @@ public class WorkoutRepository
     }
     public async Task<bool> EditWorkout(Workout workout, int[] exercises)
     {
-        Workout oldWorkout = await _databaseContext.Workouts.FindAsync(workout.Id);
+        Workout oldWorkout = await _databaseContext.Workouts
+            .Where(w => w.Id == workout.Id)
+            .Include(w => w.WorkoutExercises)
+            .FirstAsync();
+        List<WorkoutExercise> workoutExercises = new List<WorkoutExercise>();
+        foreach (int exercise in exercises)
+        {
+            workoutExercises.Add(new WorkoutExercise
+            {
+                WorkoutId = workout.Id,
+                ExerciseId = exercise
+            });
+        }
         oldWorkout.Name = workout.Name;
+        oldWorkout.WorkoutExercises = workoutExercises;
         return await _databaseContext.SaveChangesAsync() > 0;
     }
 }

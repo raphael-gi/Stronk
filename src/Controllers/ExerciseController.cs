@@ -74,7 +74,6 @@ public class ExerciseController : Controller
 
         return Redirect("/Exercise");
     }
-
     public async Task<IActionResult> Details(int id)
     {
         ViewBag.Exercise = await _exerciseRepository.GetExercise(id);
