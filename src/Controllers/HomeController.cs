@@ -40,6 +40,15 @@ public class HomeController : Controller
         }
         return Redirect("/Home");
     }
+
+    public async Task<RedirectResult> Delete(int id)
+    {
+        if (!await _postRepository.DeletePost(id))
+        {
+            Console.WriteLine("Couldn't be deleted");
+        }
+        return Redirect("/");
+    }
     public IActionResult Privacy()
     {
         return View();

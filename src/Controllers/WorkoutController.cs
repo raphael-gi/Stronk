@@ -69,4 +69,13 @@ public class WorkoutController : Controller
         
         return Redirect("/Workout");
     }
+
+    public async Task<RedirectResult> Delete(int id)
+    {
+        if (!await _workoutRepository.DeleteWorkout(id))
+        {
+            Console.WriteLine("Workout could not be deleted");
+        }
+        return Redirect("/Workout");
+    }
 }

@@ -74,6 +74,15 @@ public class ExerciseController : Controller
 
         return Redirect("/Exercise");
     }
+
+    public async Task<RedirectResult> Delete(int id)
+    {
+        if (!await _exerciseRepository.DeleteExercise(id))
+        {
+            Console.WriteLine("Couldn't be deleted");
+        }
+        return Redirect("/Exercise");
+    }
     public async Task<IActionResult> Details(int id)
     {
         ViewBag.Exercise = await _exerciseRepository.GetExercise(id);

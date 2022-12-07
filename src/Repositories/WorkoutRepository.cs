@@ -59,4 +59,13 @@ public class WorkoutRepository
         oldWorkout.WorkoutExercises = workoutExercises;
         return await _databaseContext.SaveChangesAsync() > 0;
     }
+    public async Task<bool> DeleteWorkout(int id)
+    {
+        Workout workout = await _databaseContext.Workouts
+            .Where(w => w.Id == id)
+            .Include(w => w.WorkoutExercises)
+            .FirstAsync();
+        _databaseContext.Workouts.Remove(workout);
+        return await _databaseContext.SaveChangesAsync() > 0;
+    }
 }

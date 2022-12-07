@@ -75,4 +75,13 @@ public class ExerciseRepository
         
         return true;
     }
+    public async Task<bool> DeleteExercise(int id)
+    {
+        Exercise exercise = await _databaseContext.Exercises
+            .Where(e => e.Id == id)
+            .Include(e => e.ExerciseMuscles)
+            .FirstAsync();
+        _databaseContext.Exercises.Remove(exercise);
+        return await _databaseContext.SaveChangesAsync() > 0;
+    }
 }

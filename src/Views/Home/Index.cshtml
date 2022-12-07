@@ -30,11 +30,11 @@
                         </ul>
                         @if (post.User.Username.Equals(User.Identity.Name))
                         {
-                            <button>Delete</button>
+                            <a asp-controller="Home" asp-action="Delete" asp-route-id="@post.Id"><button><i class="bi bi-trash"></i></button></a>
                         }
                         else
                         {
-                            <button>Copy Workout</button>
+                            <button><i class="bi bi-clipboard"></i></button>
                         }
                     </div>
                 </div>

@@ -18,9 +18,9 @@
             </div>
             <div class="itemButtons">
                 <a asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button class="edit"><i class="bi bi-pencil"></i></button></a>
-                <a asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button class="delete"><i class="bi bi-trash"></i></button></a>
+                <a asp-controller="Exercise" asp-action="Delete" asp-route-id="@exercise.Id"><button class="delete"><i class="bi bi-trash"></i></button></a>
             </div>
         </div>
     }
-    <a asp-controller="Exercise" asp-action="Create" class="create"><button><i class="bi bi-plus-circle"></i></button></a>
+    <a asp-controller="Exercise" asp-action="Create" class="create"><button title="Create a new Exercise"><i class="bi bi-plus-circle"></i></button></a>
 </div>

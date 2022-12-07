@@ -42,9 +42,13 @@ public class PostRepository
         await _databaseContext.Posts.AddAsync(post);
         return await _databaseContext.SaveChangesAsync() > 0;
     }
-
     public async Task<bool> DeletePost(int id)
     {
-        return true;
+        Post post = await _databaseContext.Posts
+            .Where(p => p.Id == id)
+            .Include(p => p.PostWorkout)
+            .FirstAsync();
+        _databaseContext.Posts.Remove(post);
+        return await _databaseContext.SaveChangesAsync() > 0;
     }
 }
