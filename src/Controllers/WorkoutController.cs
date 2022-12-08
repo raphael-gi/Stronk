@@ -24,7 +24,7 @@ public class WorkoutController : Controller
     }
     public async Task<IActionResult> Index()
     {
-        ViewBag.Workouts = await _workoutRepository.GetWorkouts();
+        ViewBag.Workouts = await _workoutRepository.GetWorkouts(GetId());
         return View();
     }
     public async Task<IActionResult> Create()
@@ -33,21 +33,21 @@ public class WorkoutController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<RedirectResult> Create(Workout workout, int[] exercises)
+    public async Task<RedirectToActionResult> Create(Workout workout, int[] exercises)
     {
         if (exercises.Length < 1)
         {
             Console.WriteLine("Please select an exercise");
-            return Redirect("/Workout/Create");
+            return RedirectToAction("Create");
         }
 
         workout.UserId = 1;
         if (!await _workoutRepository.CreateWorkout(workout, exercises))
         {
             Console.WriteLine("Workout could not be added");
-            return Redirect("/Workout/Create");
+            return RedirectToAction("Create");
         }
-        return Redirect("/Workout");
+        return RedirectToAction("Index");
     }
     public async Task<IActionResult> Edit(int id)
     {
@@ -56,26 +56,27 @@ public class WorkoutController : Controller
         return View(await _workoutRepository.GetWorkout(id));
     }
     [HttpPost]
-    public async Task<RedirectResult> Edit(Workout workout, int[] exercises)
+    public async Task<RedirectToActionResult> Edit(Workout workout, int[] exercises)
     {
         if (exercises.Length < 1)
         {
-            return Redirect("/Workout/Edit/" + workout.Id);
+            return RedirectToAction("Edit", "Workout", workout.Id);
         }
         if (!await _workoutRepository.EditWorkout(workout, exercises))
         {
-            return Redirect("/Workout/Edit/" + workout.Id);
+            return RedirectToAction("Edit", "Workout", workout.Id);
         }
-        
-        return Redirect("/Workout");
+
+        return RedirectToAction("Index");
     }
 
-    public async Task<RedirectResult> Delete(int id)
+    public async Task<RedirectToActionResult> Delete(int id)
     {
         if (!await _workoutRepository.DeleteWorkout(id))
         {
             Console.WriteLine("Workout could not be deleted");
         }
-        return Redirect("/Workout");
+
+        return RedirectToAction("Index");
     }
 }

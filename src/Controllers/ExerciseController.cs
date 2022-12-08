@@ -34,22 +34,22 @@ public class ExerciseController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<RedirectResult> Create(Exercise exercise, int[] muscles)
+    public async Task<RedirectToActionResult> Create(Exercise exercise, int[] muscles)
     {
         if (muscles.Length < 1)
         {
             Console.WriteLine("Please select a muscle group");
-            return Redirect("/Exercise/Create");
+            return RedirectToAction("Create");
         }
 
         exercise.UserId = GetId();
         if (!await _exerciseRepository.CreateExercise(exercise, muscles))
         {
             Console.WriteLine("Exercise couldn't be added");
-            return Redirect("/Exercise/Create");
+            return RedirectToAction("Create");
         }
 
-        return Redirect("/Exercise");
+        return RedirectToAction("Index");
     }
     public async Task<ActionResult> Edit(int id)
     {
@@ -60,28 +60,27 @@ public class ExerciseController : Controller
     }
 
     [HttpPost]
-    public async Task<RedirectResult> Edit(Exercise exercise, int[] muscles)
+    public async Task<RedirectToActionResult> Edit(Exercise exercise, int[] muscles)
     {
         if (muscles.Length < 1)
         {
-            return Redirect("/Exercise/Edit/" + exercise.Id);
+            return RedirectToAction("Edit", "Exercise", exercise.Id);
         }
 
         if (!await _exerciseRepository.EditExercise(exercise, muscles))
         {
-            return Redirect("/Exercise/Edit/" + exercise.Id);
+            return RedirectToAction("Edit", "Exercise", exercise.Id);
         }
-
-        return Redirect("/Exercise");
+        return RedirectToAction("Index");
     }
 
-    public async Task<RedirectResult> Delete(int id)
+    public async Task<RedirectToActionResult> Delete(int id)
     {
         if (!await _exerciseRepository.DeleteExercise(id))
         {
             Console.WriteLine("Couldn't be deleted");
         }
-        return Redirect("/Exercise");
+        return RedirectToAction("Index");
     }
     public async Task<IActionResult> Details(int id)
     {
