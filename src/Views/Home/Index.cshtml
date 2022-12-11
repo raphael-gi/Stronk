@@ -19,7 +19,7 @@
                 </div>
                 <div class="postBody">
                     <h2>@post.Title</h2>
-                    <h3>@post.Message</h3>
+                    <h4>@post.Message</h4>
                     <ul>
                         @foreach (PostWorkout postWorkout in post.PostWorkout)
                         {
@@ -39,12 +39,6 @@
                                 <button title="Delete this Workout" class="crudButton delete"><i class="bi bi-trash"></i></button>
                             </a>
                         }
-                        @if (post.User.Id != int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
-                        {
-                            <a asp-controller="Home" asp-action="Copy" asp-route-id="@post.Id">
-                                <button title="Copy this workout to your own Workouts" class="crudButton edit"><i class="bi bi-files"></i></button>
-                            </a>
-                        }
                     </div>
                 </div>
             </div>
@@ -55,7 +49,7 @@
             <h2>Username: @User.Identity?.Name</h2>
             @if(User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value == "True")
             {
-                <h3>You are a Admin</h3>
+                <h3>You are an Admin</h3>
             }
             <h3>You have posted @ViewBag.Amount times</h3>
             <div class="wrapCreate">

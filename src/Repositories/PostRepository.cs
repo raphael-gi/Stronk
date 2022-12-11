@@ -58,36 +58,4 @@ public class PostRepository
         _databaseContext.Posts.Remove(post);
         return await _databaseContext.SaveChangesAsync() > 0;
     }
-    public async Task<bool> Copy(int id, int userId)
-    {
-        Post post = await _databaseContext.Posts
-            .Where(p => p.Id == id)
-            .Include(p => p.PostWorkout)
-            .ThenInclude(pw => pw.Workout)
-            .ThenInclude(w => w.WorkoutExercises)
-            .ThenInclude(we => we.Exercise)
-            .ThenInclude(e => e.ExerciseMuscles)
-            .FirstAsync();
-        List<Workout> workouts = new List<Workout>();
-        foreach (PostWorkout postWorkout in post.PostWorkout)
-        {
-            workouts.Add(new Workout
-            {
-                Name = postWorkout.Workout.Name,
-                UserId = userId,
-                WorkoutExercises = postWorkout.Workout.WorkoutExercises
-            });
-        }
-        foreach (var variable in workouts)
-        {
-            Console.WriteLine(variable.Name);
-            foreach (var test in variable.WorkoutExercises)
-            {
-                Console.WriteLine(test.Exercise.Name);
-            }
-        }
-        await _databaseContext.Workouts.AddRangeAsync(workouts);
-        
-        return await _databaseContext.SaveChangesAsync() > 0;
-    }
 }

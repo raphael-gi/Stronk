@@ -20,7 +20,6 @@ public class UserRepository
         return await _databaseContext.Users
             .Where(u => u.Username == user.Username && u.Password == Hash(user.Password))
             .ToListAsync();
-        
     }
 
     public async Task<bool> Register(User user)
@@ -39,6 +38,7 @@ public class UserRepository
         }
         return true;
     }
+    
     private string Hash(string password)
     {
         string hash = String.Empty;
