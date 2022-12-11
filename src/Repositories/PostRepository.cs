@@ -12,10 +12,12 @@ public class PostRepository
     {
         _databaseContext = databaseContext;
     }
-
+    
     public async Task<List<Post>> GetPosts()
     {
         return await _databaseContext.Posts
+            .OrderByDescending(p => p.Date)
+            .ThenByDescending(p => p.Id)
             .Include(p => p.User)
             .Include(p => p.PostWorkout)
             .ThenInclude(pw => pw.Workout)
@@ -23,9 +25,15 @@ public class PostRepository
             .ThenInclude(we => we.Exercise)
             .ToListAsync();
     }
-    public async Task<List<Workout>> GetWorkouts()
+    public async Task<List<Workout>> GetWorkouts(int userId)
     {
-        return await _databaseContext.Workouts.ToListAsync();
+        return await _databaseContext.Workouts
+            .Where(w => w.UserId == userId)
+            .ToListAsync();
+    }
+    public async Task<int> GetPostsAmount(int userId)
+    {
+        return await _databaseContext.Posts.CountAsync(p => p.UserId == userId);
     }
     public async Task<bool> CreatePost(Post post, int[] workouts)
     {
@@ -48,6 +56,38 @@ public class PostRepository
             .Include(p => p.PostWorkout)
             .FirstAsync(p => p.Id == id);
         _databaseContext.Posts.Remove(post);
+        return await _databaseContext.SaveChangesAsync() > 0;
+    }
+    public async Task<bool> Copy(int id, int userId)
+    {
+        Post post = await _databaseContext.Posts
+            .Where(p => p.Id == id)
+            .Include(p => p.PostWorkout)
+            .ThenInclude(pw => pw.Workout)
+            .ThenInclude(w => w.WorkoutExercises)
+            .ThenInclude(we => we.Exercise)
+            .ThenInclude(e => e.ExerciseMuscles)
+            .FirstAsync();
+        List<Workout> workouts = new List<Workout>();
+        foreach (PostWorkout postWorkout in post.PostWorkout)
+        {
+            workouts.Add(new Workout
+            {
+                Name = postWorkout.Workout.Name,
+                UserId = userId,
+                WorkoutExercises = postWorkout.Workout.WorkoutExercises
+            });
+        }
+        foreach (var variable in workouts)
+        {
+            Console.WriteLine(variable.Name);
+            foreach (var test in variable.WorkoutExercises)
+            {
+                Console.WriteLine(test.Exercise.Name);
+            }
+        }
+        await _databaseContext.Workouts.AddRangeAsync(workouts);
+        
         return await _databaseContext.SaveChangesAsync() > 0;
     }
 }
