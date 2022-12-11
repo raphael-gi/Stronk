@@ -17,11 +17,10 @@ public class HomeController : Controller
     }
     private int GetId()
     {
-        return int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+        return int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
     }
     public async Task<IActionResult> Index()
     {
-        Console.WriteLine(User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value);
         ViewBag.Posts = await _postRepository.GetPosts();
         ViewBag.Amount = await _postRepository.GetPostsAmount(GetId());
         return View();
@@ -36,12 +35,19 @@ public class HomeController : Controller
     {
         if (workouts.Length < 1)
         {
-            Console.WriteLine("Please select atleast one workout");
+            TempData["Error"] = "Please select atleast one workout";
             return RedirectToAction("Create");
         }
-        post.UserId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+        if (post.Title == null || post.Title.Length > 50)
+        {
+            TempData["Error"] = "Please make sure all of the inputs are correct";
+            return RedirectToAction("Create");
+        }
+        post.UserId = GetId();
         if (!await _postRepository.CreatePost(post, workouts))
         {
+            TempData["Error"] = "Post couldn't be added";
             return RedirectToAction("Create");
         }
         return RedirectToAction("Index");
@@ -68,7 +74,7 @@ public class HomeController : Controller
     {
         return View();
     }
-
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

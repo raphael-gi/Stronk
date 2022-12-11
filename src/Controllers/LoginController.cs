@@ -25,16 +25,16 @@ public class LoginController : Controller
     {
         if (!ModelState.IsValid)
         {
-            Console.WriteLine("Inputs aren't valid");
+            TempData["Error"] = "Inputs aren't valid";
             return RedirectToAction("Index");
         }
 
         List<User> loginUser = await _userRepository.Login(user);
         if (!loginUser.Any())
         {
+            TempData["Error"] = "Username or Password is incorrect";
             return RedirectToAction("Index");
         }
-        Console.WriteLine(loginUser[0].Admin);
 
         List<Claim> claims = new List<Claim>
         {
@@ -61,13 +61,13 @@ public class LoginController : Controller
     {
         if (!ModelState.IsValid)
         {
-            Console.WriteLine("Inputs aren't valid");
+            TempData["Error"] = "Inputs aren't valid";
             return RedirectToAction("Register");
         }
 
         if (!await _userRepository.Register(user))
         {
-            Console.WriteLine("Register failed");
+            TempData["Error"] = "Username already taken";
             return RedirectToAction("Register");
         }
 
@@ -78,10 +78,5 @@ public class LoginController : Controller
     {
         await HttpContext.SignOutAsync();
         return RedirectToAction("Index");
-    }
-
-    public ActionResult Denied()
-    {
-        return View();
     }
 }

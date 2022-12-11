@@ -36,16 +36,16 @@ public class ExerciseController : Controller
     [HttpPost]
     public async Task<RedirectToActionResult> Create(Exercise exercise, int[] muscles)
     {
-        if (muscles.Length < 1)
+        string? errorMessage = CheckErrors(exercise, muscles);
+        if (errorMessage != null)
         {
-            Console.WriteLine("Please select a muscle group");
-            return RedirectToAction("Create");
+            TempData["Error"] = errorMessage;
+            return RedirectToAction("Edit", "Exercise", exercise.Id);
         }
-
         exercise.UserId = GetId();
         if (!await _exerciseRepository.CreateExercise(exercise, muscles))
         {
-            Console.WriteLine("Exercise couldn't be added");
+            TempData["Error"] = "Exercise couldn't be added";
             return RedirectToAction("Create");
         }
 
@@ -53,32 +53,57 @@ public class ExerciseController : Controller
     }
     public async Task<ActionResult> Edit(int id)
     {
-        Exercise exercise = await _exerciseRepository.GetExercise(id);
+        Exercise exercise;
+        try
+        {
+            exercise = await _exerciseRepository.GetExercise(id);
+        }
+        catch (InvalidOperationException)
+        {
+            return RedirectToAction("Index");
+        }
         ViewBag.SelectedMuscles = await _muscleRepository.GetSelectedMuscles(id);
         ViewBag.Muscles = await _muscleRepository.GetMuscles();
+
         return View(exercise);
     }
 
     [HttpPost]
     public async Task<RedirectToActionResult> Edit(Exercise exercise, int[] muscles)
     {
-        if (muscles.Length < 1)
+        string? errorMessage = CheckErrors(exercise, muscles);
+        if (errorMessage != null)
         {
+            TempData["Error"] = errorMessage;
             return RedirectToAction("Edit", "Exercise", exercise.Id);
         }
-
         if (!await _exerciseRepository.EditExercise(exercise, muscles))
         {
+            TempData["Error"] = "Exercise couldn't be edited";
             return RedirectToAction("Edit", "Exercise", exercise.Id);
         }
         return RedirectToAction("Index");
+    }
+
+    private string? CheckErrors(Exercise exercise, int[] muscles)
+    {
+        string? error = null;
+        if (exercise.Name == null || exercise.Name.Length > 50)
+        {
+            error = "Please make sure all of the inputs are correct";
+        }
+        if (muscles.Length < 1)
+        {
+            error = "Please select a muscle group";
+        }
+        return error;
     }
 
     public async Task<RedirectToActionResult> Delete(int id)
     {
         if (!await _exerciseRepository.DeleteExercise(id))
         {
-            Console.WriteLine("Couldn't be deleted");
+            TempData["Error"] = "Exercise couldn't be deleted";
         }
         return RedirectToAction("Index");
     }

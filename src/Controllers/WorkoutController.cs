@@ -35,16 +35,17 @@ public class WorkoutController : Controller
     [HttpPost]
     public async Task<RedirectToActionResult> Create(Workout workout, int[] exercises)
     {
-        if (exercises.Length < 1)
+        string? errorMessage = CheckErrors(workout, exercises);
+        if (errorMessage != null)
         {
-            Console.WriteLine("Please select an exercise");
-            return RedirectToAction("Create");
+            TempData["Error"] = errorMessage;
+            return RedirectToAction("Edit", "Workout", workout.Id);
         }
-
-        workout.UserId = 1;
+        
+        workout.UserId = GetId();
         if (!await _workoutRepository.CreateWorkout(workout, exercises))
         {
-            Console.WriteLine("Workout could not be added");
+            TempData["Error"] = "Workout could not be added";
             return RedirectToAction("Create");
         }
         return RedirectToAction("Index");
@@ -58,8 +59,10 @@ public class WorkoutController : Controller
     [HttpPost]
     public async Task<RedirectToActionResult> Edit(Workout workout, int[] exercises)
     {
-        if (exercises.Length < 1)
+        string? errorMessage = CheckErrors(workout, exercises);
+        if (errorMessage != null)
         {
+            TempData["Error"] = errorMessage;
             return RedirectToAction("Edit", "Workout", workout.Id);
         }
         if (!await _workoutRepository.EditWorkout(workout, exercises))
@@ -68,6 +71,19 @@ public class WorkoutController : Controller
         }
 
         return RedirectToAction("Index");
+    }
+    private string? CheckErrors(Workout workout, int[] exercises)
+    {
+        string? error = null;
+        if (workout.Name == null || workout.Name.Length > 50)
+        {
+            error = "Please make sure all of the inputs are correct";
+        }
+        if (exercises.Length < 1)
+        {
+            error = "Please select an exercise";
+        }
+        return error;
     }
 
     public async Task<RedirectToActionResult> Delete(int id)
