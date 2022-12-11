@@ -61,19 +61,6 @@ public class HomeController : Controller
         }
         return RedirectToAction("Index");
     }
-
-    public async Task<RedirectToActionResult> Copy(int id)
-    {
-        if (!await _postRepository.Copy(id, GetId()))
-        {
-            return RedirectToAction("Index");
-        }
-        return RedirectToAction("Index", "Workout");
-    }
-    public IActionResult Privacy()
-    {
-        return View();
-    }
     
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
