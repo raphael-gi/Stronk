@@ -12,4 +12,6 @@ public class User
     public string Username { get; set; }
     [Required] [MaxLength(90)]
     public string Password { get; set; }
+    [Required]
+    public bool Admin { get; set; }
 }
