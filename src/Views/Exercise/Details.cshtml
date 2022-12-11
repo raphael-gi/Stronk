@@ -2,12 +2,16 @@
     Layout = "_Layout";
     ViewData["Title"] = ViewBag.Exercise.Name;
 }
+<link rel="stylesheet" href="~/css/Details/Details.css" asp-append-version="true"/>
 
 <h1 class="pageTitle">@ViewBag.Exercise.Name</h1>
-<h2>@ViewBag.Exercise.Description</h2>
-<ul>
-    @foreach (ExerciseMuscle exerciseMuscle in ViewBag.Exercise.ExerciseMuscles)
-    {
-        <li>@exerciseMuscle.Muscle.Name</li>
-    }
-</ul>
+<div class="wrapDetails">
+    <h2 class="detailsDescription"><i>Description:</i> @ViewBag.Exercise.Description</h2>
+    <h2><i>Muscles that are being trained:</i></h2>
+    <ul>
+        @foreach (ExerciseMuscle exerciseMuscle in ViewBag.Exercise.ExerciseMuscles)
+        {
+            <h3><li>@exerciseMuscle.Muscle.Name</li></h3>
+        }
+    </ul>
+</div>

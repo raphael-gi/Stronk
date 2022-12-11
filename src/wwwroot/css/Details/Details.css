@@ -1,0 +1,16 @@
+﻿.wrapDetails {
+    margin: 0 10%;
+}
+.detailsDescription {
+    margin-bottom: 40px;
+}
+.wrapDetails ul {
+    padding-left: 20px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.wrapDetails li {
+    list-style: inherit;
+}

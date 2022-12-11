@@ -28,7 +28,13 @@ h1 {
   margin: 10px 0;
 }
 h2 {
-  font-size: 2em;
+  font-size: 2.2em;
+}
+h3 {
+  font-size: 1.5em;
+}
+h4 {
+  font-size: 1.25em;
 }
 ul {
   margin: 0;
@@ -46,6 +52,53 @@ main {
   padding-top: 100px;
   min-height: calc(100vh - 300px);
 }
+.pageTitle {
+  margin: 50px 0;
+}
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+}
+
+/* DIFFERENT BUTTONS */
+.crudButton {
+  border: none;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: white;
+  box-shadow: 0 0 5px 1px var(--shadow);
+  border-radius: 5px;
+  transition: 200ms ease;
+  background-color: transparent;
+  aspect-ratio: 1;
+  width: 30px;
+}
+.crudButton:hover {
+  box-shadow: 0 0 8px 2px var(--shadow);
+}
+.edit:hover {
+  color: #46a6ff;
+}
+.delete:hover {
+  color: #ff281e;
+}
+.create:hover {
+  color: #0ecd39;
+}
+.add {
+  width: 100%;
+  height: 30px;
+  background-color: var(--light);
+}
+.submit {
+  width: 100%;
+  height: 30px;
+  border-style: solid;
+  border-radius: 50px;
+}
+
+/* HEADER */
 
 header {
   position: fixed;
@@ -72,6 +125,8 @@ header nav {
   aspect-ratio: 1;
 }
 
+/* FOOTER */
+
 footer {
   position: relative;
   bottom: 0;
@@ -85,60 +140,7 @@ footer {
   align-items: center;
 }
 
-.pageTitle {
-  margin: 50px 0;
-}
-
-/* LOGIN */
-
-.wrap-login {
-  height: 100vh;
-  display: grid;
-  place-items: center;
-}
-.login-form {
-  width: 500px;
-  aspect-ratio: 1;
-  background-color: var(--light);
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 15px;
-  box-shadow: 0 0 5px 1px var(--shadow);
-}
-.login-form ul {
-  width: 80%;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.login-form form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  height: 300px;
-  width: 50%;
-}
-
-.login-form input {
-  color: white;
-  width: 100%;
-  height: 45px;
-  border-radius: 50px;
-  font-size: 16px;
-  border: none;
-  background-color: var(--bg);
-}
-.login-form input[type="text"], input[type="password"] {
-  padding: 0 20px;
-}
-.login-form input[type="text"]:focus, input[type="password"]:focus {
-  outline: none;
-}
-.login-form input[type="submit"] {
-  width: calc(100% + 40px);
-}
+/* LOGOUT BUTTON */
 
 .logout {
   width: 80px;
@@ -171,63 +173,6 @@ footer {
   position: absolute;
 }
 
-/* POST */
-.wrapHome {
-  display: flex;
-  margin: 0 5%;
-}
-.wrapProfile {
-  width: 30%;
-}
-.profile {
-  background-color: var(--light);
-  position: sticky;
-  top: 150px;
-}
-.wrapPosts {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 30px;
-}
-.post {
-  width: 500px;
-  min-height: 300px;
-  background-color: var(--light);
-  box-shadow: 0 0 5px 2px var(--shadow);
-  transition: 300ms ease;
-}
-.post:hover {
-  box-shadow: 0 0 10px 4px var(--shadow);
-}
-.postUser {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-style: solid;
-  border-width: 1px;
-  padding: 20px;
-}
-.postTitle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.post h2 {
-  text-align: center;
-}
-.postBody {
-  padding: 0 50px;
-}
-.postExercises {
-  padding-left: 15px;
-}
-.postExercises li {
-  list-style: initial;
-}
-
 /* ITEM */
 .wrapItems {
   width: 80%;
@@ -247,9 +192,10 @@ footer {
   align-items: stretch;
 }
 .item h2 {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .wrapSubItem {
+  margin-top: 15px;
   display: flex;
   gap: 15px;
 }
@@ -262,121 +208,9 @@ footer {
 .itemButtons {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-}
-.wrapItems button {
-  border: none;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  color: white;
-  box-shadow: 0 0 5px 1px var(--shadow);
-  border-radius: 5px;
-  transition: 200ms ease;
-}
-.wrapItems .create {
-  width: 50%;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-}
-.wrapItems .create button {
-  width: 100%;
-  height: 40px;
-  background-color: var(--light);
-  transition: 200ms ease;
-}
-.itemButtons button {
-  background-color: transparent;
-  aspect-ratio: 1;
-  width: 30px;
-}
-.wrapItems button:hover {
-  box-shadow: 0 0 8px 2px var(--shadow);
-}
-.itemButtons button.edit:hover {
-  color: #46a6ff;
-}
-.itemButtons button.delete:hover {
-  color: #ff281e;
-}
-.wrapItems .create:hover button {
-  color: #0ecd39;
+  justify-content: space-around;
+  gap: 10px;
 }
 .wrapItems i {
   font-size: 16px;
-}
-
-/* FORM */
-.wrapForm {
-  width: 100%;
-  min-height: calc(100vh - 300px);
-  margin-top: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.form {
-  background-color: var(--light);
-  width: 65%;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 15px;
-}
-.form form {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-.form input {
-  font-size: 20px;
-  background-color: transparent;
-  color: white;
-}
-.form input[type="text"] {
-  border: 1px none;
-  border-bottom-style: solid;
-  transition: 200ms ease;
-}
-.form input[type="text"]:focus {
-  outline: none;
-  border-width: 3px;
-}
-.form textarea {
-  max-width: 100%;
-  max-height: 200px;
-}
-
-/* DROPDOWN */
-.dropSelect {
-  --width: 250px;
-  --height:40px;
-}
-.dropSelect button {
-  width: var(--width);
-  height: var(--height);
-  background-color: var(--shadow);
-  color: white;
-  border: none;
-}
-.wrapOptions {
-  position: absolute;
-  width: var(--width);
-  margin: 0;
-  padding: 0;
-  background-color: rgb(29 37 43/ 0.8);
-  backdrop-filter: blur(7px);
-  display: none;
-}
-.open {
-  display: inherit;
-}
-.wrapOptions li {
-  height: 50px;
-  display: flex;
-  align-items: center;
 }

@@ -1,10 +1,12 @@
 ﻿@{
     Layout = "_Layout";;
 }
+<link rel="stylesheet" href="~/css/Form/Form.css" asp-append-version="true"/>
 
 <div class="wrapForm">
     <div class="form">
         <h1>@ViewData["Title"]</h1>
         @RenderBody()
+        <h4 class="errorMessage">@TempData["Error"]</h4>
     </div>
 </div>

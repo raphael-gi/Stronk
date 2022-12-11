@@ -5,22 +5,30 @@
 <h1 class="pageTitle">Exercises</h1>
 
 <div class="wrapItems">
+    <a asp-controller="Exercise" asp-action="Create" style="width: 50%">
+        <button class="crudButton create add" title="Create a new Exercise"><i class="bi bi-plus-circle"></i></button>
+    </a>
     @foreach (Exercise exercise in ViewBag.Exercises)
     {
         <div class="item">
             <div>
                 <h2>@exercise.Name</h2>
                 <h3>@exercise.Description</h3>
-                @foreach (ExerciseMuscle exerciseMuscle in exercise.ExerciseMuscles)
-                {
-                    <h4>@exerciseMuscle.Muscle.Name</h4>
-                }
+                <ul class="wrapSubItem">
+                    @foreach (ExerciseMuscle exerciseMuscle in exercise.ExerciseMuscles)
+                    {
+                        <li class="subItem">@exerciseMuscle.Muscle.Name</li>
+                    }
+                </ul>
             </div>
             <div class="itemButtons">
-                <a asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id"><button class="edit"><i class="bi bi-pencil"></i></button></a>
-                <a asp-controller="Exercise" asp-action="Delete" asp-route-id="@exercise.Id"><button class="delete"><i class="bi bi-trash"></i></button></a>
+                <a asp-controller="Exercise" asp-action="Edit" asp-route-id="@exercise.Id">
+                    <button class="crudButton edit"><i class="bi bi-pencil"></i></button>
+                </a>
+                <a asp-controller="Exercise" asp-action="Delete" asp-route-id="@exercise.Id">
+                    <button class="crudButton delete"><i class="bi bi-trash"></i></button>
+                </a>
             </div>
         </div>
     }
-    <a asp-controller="Exercise" asp-action="Create" class="create"><button title="Create a new Exercise"><i class="bi bi-plus-circle"></i></button></a>
 </div>

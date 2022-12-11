@@ -10,17 +10,27 @@
 {
     @Html.TextBoxFor(p => p.Title, new { placeholder = "Title", required = "required", maxlength = 50 })
     @Html.TextAreaFor(p => p.Message, new { placeholder = "Message" })
-    <div class="dropSelect">
-        <button type="button" id="dropdownButton">Select Workouts</button>
-        <ul class="wrapOptions" id="wrapOptions">
-            @foreach (Workout workout in ViewBag.Workouts) 
-            {
-                <li>
-                    @Html.CheckBox("workouts", false, new { value = workout.Id })
-                    @workout.Name
-                </li>
-            }
-        </ul>
-    </div>
-    <input type="submit" value="Create Post"/>
+    if (ViewBag.Workouts.Count > 0)
+    {
+        <div class="dropSelect">
+            <button type="button" id="dropdownButton">Select Workouts</button>
+            <ul class="wrapOptions" id="wrapOptions">
+                @foreach (Workout workout in ViewBag.Workouts) 
+                {
+                    <li>
+                        @Html.CheckBox("workouts", false, new { value = workout.Id })
+                        @workout.Name
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <h4>It seems like you don't have any Workouts yet. You can create your own Workout
+            <a asp-controller="Workout" asp-action="Create">here</a> or 
+            <a asp-controller="Home" asp-action="Index">copy</a> an existing Workout from a post.</h4>
+    }
+
+    <input class="submit" type="submit" value="Create Post"/>
 }

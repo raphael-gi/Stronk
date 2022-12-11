@@ -1,40 +1,49 @@
 ﻿@{
     ViewData["Title"] = "Posts";
 }
+<link rel="stylesheet" href="~/css/Home/Home.css" asp-append-version="true"/>
+
 <h1 class="pageTitle">Posts</h1>
 
 <div class="wrapHome">
     <div class="wrapPosts">
+        <a asp-controller="Home" asp-action="Create" style="width: 50%">
+            <button class="crudButton create add" title="Create a new Post"><i class="bi bi-plus-circle"></i></button>
+        </a>
         @foreach (Post post in ViewBag.Posts)
         {
             <div class="post">
-                <div class="postWrapper">
-                    <div class="postUser">
-                        <h3><strong>@post.User.Username</strong></h3>
-                        <h4><i>@post.Date.ToString("MM/dd/yyyy")</i></h4>
-                    </div>
-                    <div class="postBody">
-                        <h2>@post.Title</h2>
-                        <h3>@post.Message</h3>
-                        <ul>
-                            @foreach (PostWorkout postWorkout in post.PostWorkout)
-                            {
-                                <li><h4>@postWorkout.Workout.Name</h4></li>
-                                <ul class="postExercises">
-                                    @foreach (WorkoutExercise workoutExercise in postWorkout.Workout.WorkoutExercises)
-                                    {
-                                        <li>@workoutExercise.Exercise.Name</li>
-                                    }
-                                </ul>
-                            }
-                        </ul>
-                        @if (post.User.Username.Equals(User.Identity.Name))
+                <div class="postUser">
+                    <h3><strong>@post.User.Username</strong></h3>
+                    <h4><i>@post.Date.ToString("MM/dd/yyyy")</i></h4>
+                </div>
+                <div class="postBody">
+                    <h2>@post.Title</h2>
+                    <h3>@post.Message</h3>
+                    <ul>
+                        @foreach (PostWorkout postWorkout in post.PostWorkout)
                         {
-                            <a asp-controller="Home" asp-action="Delete" asp-route-id="@post.Id"><button><i class="bi bi-trash"></i></button></a>
+                            <li><h4>@postWorkout.Workout.Name</h4></li>
+                            <ul class="postExercises">
+                                @foreach (WorkoutExercise workoutExercise in postWorkout.Workout.WorkoutExercises)
+                                {
+                                    <li>@workoutExercise.Exercise.Name</li>
+                                }
+                            </ul>
                         }
-                        else
+                    </ul>
+                    <div class="wrapDelete">
+                        @if (post.User.Id == int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value) || User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value == "True")
                         {
-                            <button><i class="bi bi-clipboard"></i></button>
+                            <a asp-controller="Home" asp-action="Delete" asp-route-id="@post.Id">
+                                <button title="Delete this Workout" class="crudButton delete"><i class="bi bi-trash"></i></button>
+                            </a>
+                        }
+                        @if (post.User.Id != int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+                        {
+                            <a asp-controller="Home" asp-action="Copy" asp-route-id="@post.Id">
+                                <button title="Copy this workout to your own Workouts" class="crudButton edit"><i class="bi bi-files"></i></button>
+                            </a>
                         }
                     </div>
                 </div>
@@ -44,8 +53,22 @@
     <div class="wrapProfile">
         <div class="profile">
             <h2>Username: @User.Identity?.Name</h2>
-            <h3>Created Posts: 4</h3>
-            <a asp-controller="Home" asp-action="Create"><button>Create Post</button></a>
+            @if(User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value == "True")
+            {
+                <h3>You are a Admin</h3>
+            }
+            <h3>You have posted @ViewBag.Amount times</h3>
+            <div class="wrapCreate">
+                <a asp-controller="Home" asp-action="Create">
+                    <button class="crudButton create" title="Create a new Post">Create Post</button>
+                </a>
+                <a asp-controller="Workout" asp-action="Create">
+                    <button class="crudButton create" title="Create a new Workout">Create Workout</button>
+                </a>
+                <a asp-controller="Exercise" asp-action="Create">
+                    <button class="crudButton create" title="Create a new Exercise">Create Exercise</button>
+                </a>
+            </div>
         </div>
     </div>
 </div>

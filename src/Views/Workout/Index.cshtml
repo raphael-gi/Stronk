@@ -5,6 +5,9 @@
 <h1 class="pageTitle">Workouts</h1>
 
 <div class="wrapItems">
+    <a asp-controller="Workout" asp-action="Create" style="width: 50%">
+        <button class="crudButton create add" title="Create a new Workout"><i class="bi bi-plus-circle"></i></button>
+    </a>
     @foreach (Workout workout in ViewBag.Workouts)
     {
         <div class="item">
@@ -18,10 +21,9 @@
                 </ul>
             </div>
             <div class="itemButtons">
-                <a asp-controller="Workout" asp-action="Edit" asp-route-id="@workout.Id"><button class="edit"><i class="bi bi-pencil"></i></button></a>
-                <a asp-controller="Workout" asp-action="Delete" asp-route-id="@workout.Id"><button class="delete"><i class="bi bi-trash"></i></button></a>
+                <a asp-controller="Workout" asp-action="Edit" asp-route-id="@workout.Id"><button class="crudButton edit"><i class="bi bi-pencil"></i></button></a>
+                <a asp-controller="Workout" asp-action="Delete" asp-route-id="@workout.Id"><button class="crudButton delete"><i class="bi bi-trash"></i></button></a>
             </div>
         </div>
     }
-    <a asp-controller="Workout" asp-action="Create" class="create"><button><i class="bi bi-plus-circle"></i></button></a>
 </div>

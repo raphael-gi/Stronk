@@ -9,17 +9,25 @@
 @using (Html.BeginForm("Create", "Workout", FormMethod.Post))
 {
     @Html.TextBoxFor(workout => workout.Name, new { placeholder = "Name", required = "required", maxlength = 50 })
-    <div class="dropSelect">
-        <button type="button" id="dropdownButton">Select Exercises</button>
-        <ul class="wrapOptions" id="wrapOptions">
-            @foreach (Exercise exercise in ViewBag.Exercises)
-            {
-                <li>
-                    @Html.CheckBox("exercises", false, new { value = exercise.Id })
-                    @exercise.Name
-                </li>
-            }
-        </ul>
-    </div>
-    <input type="submit" value="Create Workout"/>
+    @if (ViewBag.Exercises.Count > 0)
+    {
+        <div class="dropSelect">
+            <button type="button" id="dropdownButton">Select Exercises</button>
+            <ul class="wrapOptions" id="wrapOptions">
+                @foreach (Exercise exercise in ViewBag.Exercises)
+                {
+                    <li>
+                        @Html.CheckBox("exercises", false, new { value = exercise.Id })
+                        @exercise.Name
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <h4>It seems like you don't have any Exercises yet. You can create your own Exercises
+            <a asp-controller="Exercise" asp-action="Create">here</a>.</h4>
+    }
+    <input class="submit" type="submit" value="Create Workout"/>
 }
