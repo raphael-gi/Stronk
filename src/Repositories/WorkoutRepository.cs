@@ -15,9 +15,10 @@ public class WorkoutRepository
     {
         return await _databaseContext.WorkoutsExercises.Where(we => we.WorkoutId == id).Select(we => we.ExerciseId).ToListAsync();
     }
-    public async Task<List<Workout>> GetWorkouts()
+    public async Task<List<Workout>> GetWorkouts(int userId)
     {
         return await _databaseContext.Workouts
+            .Where(w => w.UserId == userId)
             .Include(w => w.WorkoutExercises)
             .ThenInclude(we => we.Exercise)
             .ToListAsync();
