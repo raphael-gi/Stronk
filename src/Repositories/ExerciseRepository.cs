@@ -22,7 +22,7 @@ public class ExerciseRepository
     }
     public async Task<Exercise> GetExercise(int id)
     {
-        return await _databaseContext.Exercises.FindAsync(id);
+        return await _databaseContext.Exercises.FindAsync(id) ?? throw new InvalidOperationException();
     }
     public async Task<Exercise> GetMusclesByExercise(int id)
     {
