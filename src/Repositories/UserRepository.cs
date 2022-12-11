@@ -15,15 +15,12 @@ public class UserRepository
         _databaseContext = databaseContext;
     }
 
-    public async Task<int> Login(User user)
+    public async Task<List<User>> Login(User user)
     {
-        List<User> check = await _databaseContext.Users.Where(u => user.Username == u.Username && Hash(user.Password) == u.Password).ToListAsync();
-        if (!check.Any())
-        {
-            Console.WriteLine("User doesn't exist");
-            return -1;
-        }
-        return check[0].Id;
+        return await _databaseContext.Users
+            .Where(u => u.Username == user.Username && u.Password == Hash(user.Password))
+            .ToListAsync();
+        
     }
 
     public async Task<bool> Register(User user)
@@ -31,7 +28,6 @@ public class UserRepository
         List<int> taken = await _databaseContext.Users.Where(u => u.Username == user.Username).Select(u => u.Id).ToListAsync();
         if (taken.Any())
         {
-            Console.WriteLine("Username already taken");
             return false;
         }
 
