@@ -20,82 +20,64 @@ CREATE TABLE tbl_Muscle (
 CREATE TABLE tbl_User (
 	Id INT NOT NULL IDENTITY(0, 1),
 	Username NVARCHAR(50) NOT NULL,
-	[Password] varbinary(128) NOT NULL,
+	[Password] CHAR(64) NOT NULL,
 	[Admin] BIT NOT NULL CONSTRAINT DF_Admin DEFAULT 0,
 	CONSTRAINT PK_User PRIMARY KEY (Id)
 )
 CREATE TABLE tbl_Exercise (
 	Id INT NOT NULL IDENTITY(0, 1),
 	[Name] NVARCHAR(50) NOT NULL,
-	[Description] TEXT,
-	Id_User INT NOT NULL,
+	[Description] NVARCHAR(MAX),
+	UserId INT NOT NULL,
 	CONSTRAINT PK_Exercise PRIMARY KEY (Id),
-	CONSTRAINT FK_Exercise_User FOREIGN KEY (Id_User) REFERENCES tbl_User (Id)
+	CONSTRAINT FK_Exercise_User FOREIGN KEY (UserId) REFERENCES tbl_User (Id)
 )
 CREATE TABLE tbl_Workout (
 	Id INT NOT NULL IDENTITY(0, 1),
 	[Name] NVARCHAR(50),
-	CONSTRAINT PK_Workout PRIMARY KEY (Id)
+	UserId INT NOT NULL,
+	CONSTRAINT PK_Workout PRIMARY KEY (Id),
+	CONSTRAINT FK_Workout_User FOREIGN KEY (UserId) REFERENCES tbl_User (Id)
 )
 CREATE TABLE tbl_Post (
 	Id INT NOT NULL IDENTITY(0, 1),
 	Title NVARCHAR(50) NOT NULL,
-	[Message] TEXT,
-	[Date] DATE NOT NULL CONSTRAINT DF_Date DEFAULT GETDATE(),
-	Id_User INT NOT NULL,
+	[Message] NVARCHAR(MAX),
+	[Date] DATE NOT NULL CONSTRAINT DF_Date DEFAULT SYSDATETIME(),
+	UserId INT NOT NULL,
 	CONSTRAINT PK_Post PRIMARY KEY (Id),
-	CONSTRAINT FK_Post_User FOREIGN KEY (Id_User) REFERENCES tbl_User (Id)
+	CONSTRAINT FK_Post_User FOREIGN KEY (UserId) REFERENCES tbl_User (Id)
 )
 
 -- HILFSTABELLEN
 
 CREATE TABLE tbl_Exercise_Muscle (
 	Id INT NOT NULL IDENTITY(0, 1),
-	Id_Exercise INT NOT NULL,
-	Id_Muscle INT NOT NULL,
+	ExerciseId INT NOT NULL,
+	MuscleId INT NOT NULL,
 	CONSTRAINT PK_Exercise_Muscle PRIMARY KEY (Id),
-	CONSTRAINT FK_Exercise_Muscle FOREIGN KEY (Id_Exercise) REFERENCES tbl_Exercise (Id),
-	CONSTRAINT FK_Muscle_Exercise FOREIGN KEY (Id_Muscle) REFERENCES tbl_Muscle (Id)
+	CONSTRAINT FK_Exercise_Muscle FOREIGN KEY (ExerciseId) REFERENCES tbl_Exercise (Id),
+	CONSTRAINT FK_Muscle_Exercise FOREIGN KEY (MuscleId) REFERENCES tbl_Muscle (Id)
 )
 
 CREATE TABLE tbl_Workout_Exercise (
 	Id INT NOT NULL IDENTITY(0, 1),
-	Id_Workout INT NOT NULL,
-	Id_Exercise INT NOT NULL,
+	WorkoutId INT NOT NULL,
+	ExerciseId INT NOT NULL,
 	CONSTRAINT PK_Workout_Exercise PRIMARY KEY (Id),
-	CONSTRAINT FK_Workout_Exercise FOREIGN KEY (Id_Workout) REFERENCES tbl_Workout (Id),
-	CONSTRAINT FK_Exercise_Workout FOREIGN KEY (Id_Exercise) REFERENCES tbl_Exercise (Id)
+	CONSTRAINT FK_Workout_Exercise FOREIGN KEY (WorkoutId) REFERENCES tbl_Workout (Id) ON DELETE CASCADE,
+	CONSTRAINT FK_Exercise_Workout FOREIGN KEY (ExerciseId) REFERENCES tbl_Exercise (Id) ON DELETE CASCADE
 )
 
 CREATE TABLE tbl_Post_Workout (
-	Id INT NOT NULL IDENTITY(0,1),
-	Id_Post INT NOT NULL,
-	Id_Workout INT NOT NULL,
+	Id INT NOT NULL IDENTITY(0, 1),
+	PostId INT NOT NULL,
+	WorkoutId INT NOT NULL,
 	CONSTRAINT PK_Post_Workout PRIMARY KEY (Id),
-	CONSTRAINT FK_Post_Workout FOREIGN KEY (Id_Post) REFERENCES tbl_Post (Id),
-	CONSTRAINT FK_Wourkout_Post FOREIGN KEY (Id_Workout) REFERENCES tbl_Workout (Id)
+	CONSTRAINT FK_Post_Workout FOREIGN KEY (PostId) REFERENCES tbl_Post (Id),
+	CONSTRAINT FK_Wourkout_Post FOREIGN KEY (WorkoutId) REFERENCES tbl_Workout (Id) ON DELETE CASCADE
 )
 
--- PROCEDUREN
-GO
-CREATE PROCEDURE usp_Register @username NVARCHAR(50), @password NVARCHAR(90)
-AS
-BEGIN
-DECLARE @used AS INT = 0;
-SELECT @used = COUNT(Username) FROM tbl_User WHERE Username = @username
-IF LEN(@username) > 50 OR LEN(@password) > 90 OR @used > 0
-	RETURN
-
-INSERT INTO tbl_User (Username, [Password]) VALUES (@username, HASHBYTES('SHA2_256', @password))
-END
-GO
-
-CREATE PROCEDURE usp_Login @username NVARCHAR(50), @password NVARCHAR(90)
-AS
-BEGIN
-SELECT Id FROM tbl_User WHERE Username = @username AND [Password] = HASHBYTES('SHA2_256', @password);
-END
-GO
 
 -- INDEX
 
@@ -104,44 +86,24 @@ CREATE INDEX ix_Muscle
 ON tbl_Muscle ([Name])
 GO
 
--- VIEWS
-
-GO
-CREATE VIEW vw_Exercise
-AS
-SELECT tbl_Exercise.Id, tbl_Exercise.[Name], tbl_Exercise.[Description], tbl_Muscle.[Name] AS MuscleName
-FROM tbl_Exercise INNER JOIN (tbl_Exercise_Muscle INNER JOIN tbl_Muscle ON tbl_Exercise_Muscle.Id_Muscle = tbl_Muscle.Id)
-ON tbl_Exercise_Muscle.Id_Exercise = tbl_Exercise.Id
-GO
-
-GO
-CREATE VIEW vw_Workout
-AS
-SELECT tbl_Workout.[Name], tbl_Exercise.[Name] AS ExerciseName, tbl_Muscle.[Name] AS MuscleName
-FROM tbl_Workout INNER JOIN 
-((tbl_Exercise INNER JOIN
-(tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Muscle) ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise)
-INNER JOIN tbl_Workout_Exercise ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Exercise)
-ON tbl_Workout.Id = tbl_Workout_Exercise.Id_Workout
-GO
-
 
 INSERT INTO tbl_Muscle VALUES('Back');
 INSERT INTO tbl_Muscle VALUES('Chest');
-INSERT INTO tbl_Muscle VALUES('Bicep');
-INSERT INTO tbl_Muscle VALUES('Tricep');
-INSERT INTO tbl_Muscle VALUES('Quads');
-INSERT INTO tbl_Muscle VALUES('Calves');
-EXEC usp_Register @username = 'Joe', @password = 'Hi';
-INSERT INTO tbl_Exercise ([Name], Id_User) VALUES ('Bench Press', 0);
-INSERT INTO tbl_Exercise ([Name], Id_User) VALUES ('Pull Up', 0);
-INSERT INTO tbl_Workout VALUES ('Upper Body');
+INSERT INTO tbl_Muscle VALUES('Arms');
+INSERT INTO tbl_Muscle VALUES('Shoulders');
+INSERT INTO tbl_Muscle VALUES('Legs');
+INSERT INTO tbl_Muscle VALUES('Core');
+INSERT INTO tbl_Muscle VALUES('Full Body');
+INSERT INTO tbl_User (Username, [Password], [Admin]) VALUES ('Joe', '3639EFCD08ABB273B1619E82E78C29A7DF02C1051B1820E99FC395DCAA3326B8', 1);
+INSERT INTO tbl_Exercise ([Name], [Description], UserId) VALUES ('Bench Press', 'fsadf0', 0);
+INSERT INTO tbl_Exercise ([Name], [Description], UserId) VALUES ('Pull Up', 'sfj', 0);
+INSERT INTO tbl_Exercise_Muscle (ExerciseId, MuscleId) VALUES(0, 0);
+INSERT INTO tbl_Exercise_Muscle (ExerciseId, MuscleId) VALUES(0, 1);
+INSERT INTO tbl_Exercise_Muscle (ExerciseId, MuscleId) VALUES(1, 1);
+INSERT INTO tbl_Workout VALUES ('Upper Body', 0);
+INSERT INTO tbl_Workout VALUES ('test', 0);
 INSERT INTO tbl_Workout_Exercise VALUES (0, 0);
-INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(0, 1);
-INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(0, 2);
-INSERT INTO tbl_Exercise_Muscle (Id_Exercise, Id_Muscle) VALUES(1, 1);
-INSERT INTO tbl_Post (Title, Id_User) VALUES('Crazy Workout', 0);
-INSERT INTO tbl_Post (Title, Id_User) VALUES('Another Crazy Workout', 0);
-
--- SELECT tbl_Exercise.Name AS 'Exercise', tbl_Muscle.Name AS 'Muscle' FROM tbl_Exercise INNER JOIN (tbl_Muscle INNER JOIN tbl_Exercise_Muscle ON tbl_Muscle.Id = tbl_Exercise_Muscle.Id_Muscle) ON tbl_Exercise.Id = tbl_Exercise_Muscle.Id_Exercise;
--- SELECT tbl_Workout.Name AS 'Workout', tbl_Exercise.Name AS 'Exercise' FROM tbl_Workout INNER JOIN (tbl_Exercise INNER JOIN tbl_Workout_Exercise ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Exercise) ON tbl_Exercise.Id = tbl_Workout_Exercise.Id_Workout;
+INSERT INTO tbl_Post (Title, [Message], UserId) VALUES('Crazy Workout', 'Wow this was so much fun', 0);
+INSERT INTO tbl_Post (Title, [Message], UserId) VALUES('Another Crazy Workout', 'Again so much fun', 0);
+INSERT INTO tbl_Post_Workout VALUES (0, 0);
+INSERT INTO tbl_Post_Workout VALUES (1, 0);
